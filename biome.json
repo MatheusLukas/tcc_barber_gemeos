@@ -45,12 +45,16 @@
 				"recommended": true,
 				"noDefaultExport": {
 					"level": "off"
-				}
+				},
+				"noNonNullAssertion": "off"
 			},
 			"suspicious": {
 				"all": true,
 				"noConsoleLog": "off",
-				"noReactSpecificProps": "off"
+				"noReactSpecificProps": "off",
+				"noExplicitAny": "off",
+				"noConsole": "off",
+				"noArrayIndexKey": "info"
 			},
 			"nursery": {
 				"all": true,
@@ -58,7 +62,8 @@
 				"useSortedClasses": "off",
 				"useConsistentCurlyBraces": "warn",
 				"noSecrets": "off",
-				"useExplicitType": "off"
+				"useExplicitType": "off",
+				"noProcessEnv": "off"
 			}
 		}
 	},

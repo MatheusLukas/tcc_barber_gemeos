@@ -37,14 +37,14 @@ export function About() {
 			<div className="grid grid-cols-[5fr_7fr]">
 				<div className="space-y-4">
 					<p className="text-2xl font-bold">Sobre nós</p>
-					<p className="text-muted-foreground text-balance">
+					<p className="text-muted-text text-balance">
 						Bem-vindo à Barbearia Gêmeos, localizada em São Paulo, onde tradição
 						e estilo se encontram. Fundada por dois irmãos, oferecemos
 						atendimento personalizado, unindo técnicas clássicas e modernas.
 						Nossa equipe qualificada está sempre atualizada com as últimas
 						tendências, garantindo uma experiência única de cuidado e bem-estar.
 					</p>
-					<p className="text-muted-foreground text-balance">
+					<p className="text-muted-text text-balance">
 						Bem-vindo à Barbearia Gêmeos, localizada em São Paulo, onde tradição
 						e estilo se encontram. Fundada por dois irmãos, oferecemos
 						atendimento personalizado, unindo técnicas clássicas e modernas.
@@ -78,7 +78,7 @@ export function About() {
 				</div>
 			</div>
 
-			<div className="grid grid-cols-3 gap-40">
+			<div className="grid grid-cols-3 gap-20">
 				{itemsAbout.map((item, idx) => (
 					<BlurFade key={item.title} delay={0.5 + idx * 0.05} inView>
 						<CardAbout title={item.title} description={item.description} />

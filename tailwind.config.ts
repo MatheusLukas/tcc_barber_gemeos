@@ -1,5 +1,9 @@
 import type { Config } from "tailwindcss";
 
+const {
+	default: flattenColorPalette,
+} = require("tailwindcss/lib/util/flattenColorPalette");
+
 const config: Config = {
 	darkMode: ["class"],
 	content: [
@@ -12,6 +16,10 @@ const config: Config = {
 			container: {
 				center: true,
 				padding: "8rem",
+			},
+			boxShadow: {
+				input:
+					"0px 2px 3px -1px rgba(0,0,0,0.1), 0px 1px 0px 0px rgba(25,28,33,0.02), 0px 0px 0px 1px rgba(25,28,33,0.08)",
 			},
 			colors: {
 				background: "hsl(var(--background))",
@@ -35,6 +43,7 @@ const config: Config = {
 				muted: {
 					DEFAULT: "hsl(var(--muted))",
 					foreground: "hsl(var(--muted-foreground))",
+					text: "hsl(var(--muted-text))",
 				},
 				accent: {
 					DEFAULT: "hsl(var(--accent))",
@@ -62,6 +71,22 @@ const config: Config = {
 			},
 		},
 	},
-	plugins: [require("tailwindcss-animate"), require("tailwindcss-animated")],
+	plugins: [
+		require("tailwindcss-animate"),
+		require("tailwindcss-animated"),
+		addVariablesForColors,
+	],
 };
+
+function addVariablesForColors({ addBase, theme }: any) {
+	const allColors = flattenColorPalette(theme("colors"));
+	const newVars = Object.fromEntries(
+		Object.entries(allColors).map(([key, val]) => [`--${key}`, val]),
+	);
+
+	addBase({
+		":root": newVars,
+	});
+}
+
 export default config;
