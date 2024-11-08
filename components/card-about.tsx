@@ -5,9 +5,9 @@ type Props = {
 
 export function CardAbout({ title, description }: Props) {
 	return (
-		<div className="bg-muted p-6 min-h-56 rounded-md">
+		<div className="bg-muted p-6 min-h-56 rounded-md space-y-2">
 			<p className="text-2xl font-bold">{title}</p>
-			<p className="text-muted-foreground text-balance">{description}</p>
+			<p className="text-muted-text text-balance">{description}</p>
 		</div>
 	);
 }
