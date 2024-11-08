@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, User2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -59,7 +59,7 @@ export function Navbar() {
 			}}
 			viewport={{ once: true, margin: "-64px" }}
 			className={cn(
-				"sticky top-0 z-50 flex flex-wrap items-center justify-between duration-500 border-b border-black h-20 transition-all w-full bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-10 bg-background/20",
+				"sticky top-0 z-50 flex flex-wrap items-center justify-between duration-500 border-b border-black h-20 transition-all w-full bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-10 bg-background/60",
 				isScrolled ? "h-16" : "bg-transparent",
 			)}
 		>
@@ -84,6 +84,17 @@ export function Navbar() {
 					<Button className="hover:scale-105 transition-transform group">
 						Agendar <ArrowUpRight />
 					</Button>
+
+					<Button
+						variant="secondary"
+						className="hover:scale-105 transition-transform group"
+						asChild
+					>
+						<Link href="/login">
+							Login <User2 />
+						</Link>
+					</Button>
+
 					<ModeToggle />
 				</div>
 			</div>
