@@ -1,13 +1,15 @@
 import { About } from "@/components/about";
 import { HomeHero } from "@/components/home-hero";
 import { Navbar } from "@/components/navbar";
+import { OurServices } from "@/components/our-services";
 
 export default function Home() {
-	return (
-		<>
-			<Navbar />
-			<HomeHero />
-			<About />
-		</>
-	);
+  return (
+    <>
+      <Navbar />
+      <HomeHero />
+      <About />
+      <OurServices />
+    </>
+  );
 }
