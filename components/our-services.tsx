@@ -1,3 +1,4 @@
+import * as motion from "framer-motion/client";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { Button } from "./ui/button";
@@ -10,27 +11,27 @@ const servicesPrimary = [
     value: "R$ 30,00",
   },
   {
-    type: "Corte 1 pentea",
+    type: "Corte 2 pentea",
     value: "R$ 30,00",
   },
   {
-    type: "Corte 1 pentea",
+    type: "Corte 3 pentea",
     value: "R$ 30,00",
   },
   {
-    type: "Corte 1 pentea",
+    type: "Corte 4 pentea",
     value: "R$ 30,00",
   },
   {
-    type: "Corte 1 pentea",
+    type: "Corte 5 pentea",
     value: "R$ 30,00",
   },
   {
-    type: "Corte 1 pentea",
+    type: "Corte 6 pentea",
     value: "R$ 30,00",
   },
   {
-    type: "Corte 1 pentea",
+    type: "Corte 7 pentea",
     value: "R$ 30,00",
   },
 ];
@@ -40,34 +41,43 @@ const servicesSecondary = [
     value: "R$ 30,00",
   },
   {
-    type: "Corte 1 pentea",
+    type: "Corte 2 pentea",
     value: "R$ 30,00",
   },
   {
-    type: "Corte 1 pentea",
+    type: "Corte 3 pentea",
     value: "R$ 30,00",
   },
   {
-    type: "Corte 1 pentea",
+    type: "Corte 4 pentea",
     value: "R$ 30,00",
   },
   {
-    type: "Corte 1 pentea",
+    type: "Corte 5 pentea",
     value: "R$ 30,00",
   },
   {
-    type: "Corte 1 pentea",
+    type: "Corte 6 pentea",
     value: "R$ 30,00",
   },
   {
-    type: "Corte 1 pentea",
+    type: "Corte 7 pentea",
     value: "R$ 30,00",
   },
 ];
 
 export function OurServices() {
   return (
-    <div className="container flex justify-center items-center">
+    <motion.div
+      initial={{ opacity: 0, x: -50 }}
+      whileInView={{
+        opacity: 1,
+        x: 0,
+        transition: { duration: 0.4, delay: 0.2 },
+      }}
+      viewport={{ once: true, margin: "-64px" }}
+      className="flex justify-center items-center"
+    >
       <div className="relative flex justify-center w-[108rem] h-[700px]">
         <Image
           className="w-full h-full object-cover"
@@ -77,7 +87,7 @@ export function OurServices() {
           height={1080}
           quality={100}
         />
-        <div className="container absolute inset-0 bg-black opacity-85" />
+        <div className="absolute inset-0 bg-black opacity-85" />
 
         <div className="absolute top-10 flex items-center justify-center flex-col *:font-bold text-white">
           <p className="text-4xl">Nossos serviços</p>
@@ -85,9 +95,9 @@ export function OurServices() {
 
         <Tabs
           defaultValue="account"
-          className="w-[50rem] absolute top-40 flex justify-center flex-col"
+          className="w-[50rem] absolute top-40 flex justify-center flex-col animate-fade-up delay-500"
         >
-          <TabsList className="p-6 flex bg-primary text-muted-text gap-4">
+          <TabsList className="p-6 flex bg-primary text-muted-text gap-4 rounded-none">
             <TabsTrigger className="w-full bg-primary gap-4" value="account">
               Segunda • Terça • Quarta
             </TabsTrigger>
@@ -97,20 +107,18 @@ export function OurServices() {
           </TabsList>
           <TabsContent
             value="account"
-            className="flex justify-center items-center"
+            className="flex justify-center items-center mt-2"
           >
             <Table className="flex justify-center items-center flex-col">
               {servicesPrimary.map((service, index) => {
                 return (
-                  // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
-                  <TableBody className="w-full">
+                  <TableBody key={service.type} className="w-full">
                     <TableRow className="flex justify-center items-center flex-row w-[50rem]">
                       <TableCell
-                        // biome-ignore lint/nursery/useConsistentCurlyBraces: <explanation>
                         className={`p-4 w-full flex items-center justify-center ${
                           index % 2 === 0
                             ? "bg-background"
-                            : "bg-[#262626] text-primary-inverter"
+                            : "bg-muted-foreground"
                         }`}
                       >
                         {service.type}
@@ -119,7 +127,7 @@ export function OurServices() {
                         className={`p-4 w-full flex items-center justify-center ${
                           index % 2 === 0
                             ? "bg-background"
-                            : "bg-[#262626] text-primary-inverter"
+                            : "bg-muted-foreground"
                         }`}
                       >
                         {service.value}
@@ -130,18 +138,20 @@ export function OurServices() {
               })}
             </Table>
           </TabsContent>
-          <TabsContent value="password">
+          <TabsContent
+            value="password"
+            className="flex justify-center items-center mt-2  "
+          >
             <Table>
               {servicesSecondary.map((service, index) => {
                 return (
-                  // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
-                  <TableBody className="w-full ">
-                    <TableRow className=" flex justify-center items-center flex-row w-[50rem]">
+                  <TableBody key={service.type} className="w-full ">
+                    <TableRow className=" flex justify-center items-center flex-row max-w-[50rem]">
                       <TableCell
                         className={`p-4 w-full flex items-center justify-center ${
                           index % 2 === 0
                             ? "bg-background"
-                            : "bg-[#262626] text-primary-inverter"
+                            : "bg-muted-foreground"
                         }`}
                       >
                         {service.type}
@@ -150,7 +160,7 @@ export function OurServices() {
                         className={`p-4 w-full flex items-center justify-center ${
                           index % 2 === 0
                             ? "bg-background"
-                            : "bg-[#262626] text-primary-inverter"
+                            : "bg-muted-foreground "
                         }`}
                       >
                         {service.value}
@@ -162,17 +172,17 @@ export function OurServices() {
             </Table>
           </TabsContent>
         </Tabs>
-        <div className="absolute bottom-6 w-[30.625rem] text-center text-lg">
+        <div className="absolute bottom-6 max-w-md text-center text-lg *:text-white">
           <p>
             Aproveite nossos preços e agende seu corte com um dos nossos
             barbeiros
           </p>
 
-          <Button className="w-[27.5rem] h-[3rem] text-lg hover:scale-105 transition-transform">
+          <Button className="h-12 w-full text-lg hover:scale-105 transition-transform">
             Agendar <ArrowUpRight width={35} height={35} />
           </Button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
