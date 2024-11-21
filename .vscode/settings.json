@@ -6,5 +6,10 @@
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
   },
-  "typescript.preferences.autoImportFileExcludePatterns": ["dist"],
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "dist"
+  ],
+  "cSpell.words": [
+    "Coments"
+  ],
 }
