@@ -10,6 +10,13 @@ CREATE TABLE IF NOT EXISTS "account" (
 	"password" text
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "jwks" (
+	"id" text PRIMARY KEY NOT NULL,
+	"publicKey" text NOT NULL,
+	"privateKey" text NOT NULL,
+	"createdAt" timestamp NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "session" (
 	"id" text PRIMARY KEY NOT NULL,
 	"expiresAt" timestamp NOT NULL,
@@ -33,10 +40,10 @@ CREATE TABLE IF NOT EXISTS "verification" (
 	"id" text PRIMARY KEY NOT NULL,
 	"identifier" text NOT NULL,
 	"value" text NOT NULL,
-	"expiresAt" timestamp NOT NULL
+	"expiresAt" timestamp NOT NULL,
+	"createdAt" timestamp
 );
 --> statement-breakpoint
-DROP TABLE "users" CASCADE;--> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "account" ADD CONSTRAINT "account_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION

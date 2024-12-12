@@ -15,7 +15,10 @@ const config: Config = {
 		extend: {
 			container: {
 				center: true,
-				padding: "8rem",
+				padding: "2rem",
+				screens: {
+					"2xl": "1400px",
+				},
 			},
 			boxShadow: {
 				input:

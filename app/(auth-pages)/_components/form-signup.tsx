@@ -2,10 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 
-import { signIn } from "@/lib/auth-client";
+import { signUp } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import { userExist } from "@/app/server/userExist";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -17,11 +15,13 @@ import { Label } from "./label";
 const schemaLogin = z.object({
 	email: z.string().email("Email inválido"),
 	password: z.string().min(6, "A senha deve ter no mínimo 6 caracteres"),
+	newPassword: z.string().min(6, "A senha deve ter no mínimo 6 caracteres"),
+	name: z.string().min(3, "O nome deve ter no mínimo 3 caracteres"),
 });
 
 type schemaLoginType = z.infer<typeof schemaLogin>;
 
-export function FormSignIn() {
+export function FormSignUp() {
 	const {
 		register,
 		handleSubmit,
@@ -31,20 +31,21 @@ export function FormSignIn() {
 	});
 
 	const onSubmit = async (data: schemaLoginType) => {
-		const userExisting = await userExist(data.email);
-
-		if (userExisting.length === 0) {
-			toast.error("Usuário não encontrado");
+		if (data.password !== data.newPassword) {
+			toast.error("As senhas não coincidem");
 			return;
 		}
 
-		const signInPromise = new Promise((resolve, reject) => {
+		const signUpPromise = new Promise((resolve, reject) => {
 			try {
-				signIn
+				signUp
 					.email(
 						{
+							name: data.name,
 							email: data.email,
 							password: data.password,
+							image: undefined,
+							phoneNumberVerified: false,
 						},
 						{
 							onRequest: () => {
@@ -66,10 +67,10 @@ export function FormSignIn() {
 			}
 		});
 
-		toast.promise(signInPromise, {
-			loading: "Logando...",
-			success: "Usuário logado com sucesso",
-			error: "Erro ao logar usuário",
+		toast.promise(signUpPromise, {
+			loading: "Criando Usúario...",
+			success: "Usuário criado com sucesso, cheque seu email!",
+			error: "Erro ao criar usuário",
 		});
 	};
 
@@ -86,20 +87,34 @@ export function FormSignIn() {
 	];
 
 	return (
-		<div className="flex flex-col justify-center mx-auto items-center animate-fade-left min-w-96">
+		<div className="flex flex-col justify-center container items-center animate-fade-left h-screen">
 			<Image src="/logo.svg" alt="Logo" width={200} height={200} />
 			<div className="space-y-2">
 				<TypewriterEffect words={words} />
 				<p className="text-muted-text text-center">
-					Faça o login para ter acesso a nosso agendamento.
+					Crie uma conta para começar a agendar!
 				</p>
 			</div>
 
 			<form
-				className="w-full flex flex-col gap-4"
+				className="w-full flex flex-col gap-4 max-w-sm"
 				onSubmit={handleSubmit(onSubmit)}
 			>
 				<div className="flex flex-col gap-6 mt-4">
+					<div>
+						<Label htmlFor="name">Nome</Label>
+						<Input
+							id="name"
+							type="name"
+							placeholder="Name"
+							{...register("name")}
+						/>
+						{errors.name && (
+							<p className="text-red-500 text-sm animate-fade">
+								{errors.name.message}
+							</p>
+						)}
+					</div>
 					<div>
 						<Label htmlFor="email">Email</Label>
 						<Input
@@ -109,7 +124,9 @@ export function FormSignIn() {
 							{...register("email")}
 						/>
 						{errors.email && (
-							<p className="text-red-500 text-sm">{errors.email.message}</p>
+							<p className="text-red-500 text-sm  animate-fade">
+								{errors.email.message}
+							</p>
 						)}
 					</div>
 					<div>
@@ -121,35 +138,33 @@ export function FormSignIn() {
 							{...register("password")}
 						/>
 						{errors.password && (
-							<p className="text-red-500 text-sm">{errors.password.message}</p>
+							<p className="text-red-500 text-sm  animate-fade">
+								{errors.password.message}
+							</p>
+						)}
+					</div>
+					<div>
+						<Label htmlFor="newPassword">Confirmar senha</Label>
+						<Input
+							id="newPassword"
+							type="password"
+							placeholder="********"
+							{...register("newPassword")}
+						/>
+						{errors.newPassword && (
+							<p className="text-red-500 text-sm  animate-fade">
+								{errors.newPassword.message}
+							</p>
 						)}
 					</div>
 				</div>
-				<div className="self-end">
-					<Link
-						className="text-primary hover:underline text-sm"
-						href="/forgot-password"
-					>
-						Esqueceu a Senha?
-					</Link>
-				</div>
 				<Button className="py-5" type="submit">
-					Log In
+					Sign Up
 				</Button>
-				<div className="space-y-4">
-					<div className="flex items-center gap-2">
-						<hr className="w-full bg-muted-text h-0.5" />
-						<p className="whitespace-nowrap text-muted-text">ou continue com</p>
-						<hr className="w-full bg-muted-text h-0.5" />
-					</div>
-					<div className="w-full py-2 bg-muted rounded-md hover:cursor-not-allowed select-none">
-						<p className="text-center">COMING SOON...</p>
-					</div>
-				</div>
 				<div className="flex items-center justify-center gap-1">
-					<p>Não é cadastrado?</p>
-					<Link href="/register" className="text-primary hover:underline">
-						Crie uma conta
+					<p>Já tem uma conta?</p>
+					<Link href="/login" className="text-primary hover:underline">
+						Faça Login
 					</Link>
 				</div>
 			</form>

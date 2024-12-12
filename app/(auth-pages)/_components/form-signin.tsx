@@ -2,26 +2,29 @@
 import { Button } from "@/components/ui/button";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 
-import { signUp } from "@/lib/auth-client";
+import { signIn } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { userExist } from "@/app/server/userExist";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Input } from "./input";
 import { Label } from "./label";
+import { DialogForgetPassword } from "./modal-forget-password";
 
 const schemaLogin = z.object({
 	email: z.string().email("Email inválido"),
 	password: z.string().min(6, "A senha deve ter no mínimo 6 caracteres"),
-	newPassword: z.string().min(6, "A senha deve ter no mínimo 6 caracteres"),
-	name: z.string().min(3, "O nome deve ter no mínimo 3 caracteres"),
 });
 
 type schemaLoginType = z.infer<typeof schemaLogin>;
 
-export function FormSignUp() {
+export function FormSignIn() {
+	const router = useRouter();
 	const {
 		register,
 		handleSubmit,
@@ -31,20 +34,20 @@ export function FormSignUp() {
 	});
 
 	const onSubmit = async (data: schemaLoginType) => {
-		if (data.password !== data.newPassword) {
-			toast.error("As senhas não coincidem");
+		const userExisting = await userExist(data.email);
+
+		if (userExisting.length === 0) {
+			toast.error("Usuário não encontrado");
 			return;
 		}
 
-		const signUpPromise = new Promise((resolve, reject) => {
+		const signInPromise = new Promise((resolve, reject) => {
 			try {
-				signUp
+				signIn
 					.email(
 						{
-							name: data.name,
 							email: data.email,
 							password: data.password,
-							image: undefined,
 						},
 						{
 							onRequest: () => {
@@ -53,10 +56,11 @@ export function FormSignUp() {
 							onSuccess: (data) => {
 								console.log("Success", data);
 								resolve(data);
+								router.push("/");
 							},
 							onError: (error) => {
 								console.log("Error", error);
-								reject(error);
+								reject(error.error);
 							},
 						},
 					)
@@ -66,10 +70,14 @@ export function FormSignUp() {
 			}
 		});
 
-		toast.promise(signUpPromise, {
-			loading: "Criando Usúario...",
-			success: "Usuário criado com sucesso",
-			error: "Erro ao criar usuário",
+		toast.promise(signInPromise, {
+			loading: "Logando...",
+			success: "Usuário logado com sucesso",
+			error: (error) => {
+				return JSON.stringify(error.status) === "403"
+					? "Email não verificado, cheque seu email!"
+					: "Erro ao logar usuário ";
+			},
 		});
 	};
 
@@ -86,32 +94,20 @@ export function FormSignUp() {
 	];
 
 	return (
-		<div className="flex flex-col justify-center mx-auto items-center animate-fade-left min-w-96">
+		<div className="flex flex-col justify-center container items-center animate-fade-left h-screen">
 			<Image src="/logo.svg" alt="Logo" width={200} height={200} />
 			<div className="space-y-2">
 				<TypewriterEffect words={words} />
 				<p className="text-muted-text text-center">
-					Crie uma conta para começar a agendar!
+					Faça o login para ter acesso a nosso agendamento.
 				</p>
 			</div>
 
 			<form
-				className="w-full flex flex-col gap-4"
+				className="w-full flex flex-col gap-4 max-w-sm"
 				onSubmit={handleSubmit(onSubmit)}
 			>
 				<div className="flex flex-col gap-6 mt-4">
-					<div>
-						<Label htmlFor="name">Nome</Label>
-						<Input
-							id="name"
-							type="name"
-							placeholder="Name"
-							{...register("name")}
-						/>
-						{errors.name && (
-							<p className="text-red-500 text-sm">{errors.name.message}</p>
-						)}
-					</div>
 					<div>
 						<Label htmlFor="email">Email</Label>
 						<Input
@@ -124,7 +120,6 @@ export function FormSignUp() {
 							<p className="text-red-500 text-sm">{errors.email.message}</p>
 						)}
 					</div>
-
 					<div>
 						<Label htmlFor="password">Senha</Label>
 						<Input
@@ -137,28 +132,27 @@ export function FormSignUp() {
 							<p className="text-red-500 text-sm">{errors.password.message}</p>
 						)}
 					</div>
-					<div>
-						<Label htmlFor="newPassword">Confirmar senha</Label>
-						<Input
-							id="newPassword"
-							type="password"
-							placeholder="********"
-							{...register("newPassword")}
-						/>
-						{errors.newPassword && (
-							<p className="text-red-500 text-sm">
-								{errors.newPassword.message}
-							</p>
-						)}
-					</div>
+				</div>
+				<div className="self-end">
+					<DialogForgetPassword />
 				</div>
 				<Button className="py-5" type="submit">
-					Sign Up
+					Log In
 				</Button>
+				<div className="space-y-4">
+					<div className="flex items-center gap-2">
+						<hr className="w-full bg-muted-text h-0.5" />
+						<p className="whitespace-nowrap text-muted-text">ou continue com</p>
+						<hr className="w-full bg-muted-text h-0.5" />
+					</div>
+					<div className="w-full py-2 bg-muted rounded-md hover:cursor-not-allowed select-none">
+						<p className="text-center">COMING SOON...</p>
+					</div>
+				</div>
 				<div className="flex items-center justify-center gap-1">
-					<p>Já tem uma conta?</p>
-					<Link href="/login" className="text-primary hover:underline">
-						Faça Login
+					<p>Não é cadastrado?</p>
+					<Link href="/register" className="text-primary hover:underline">
+						Crie uma conta
 					</Link>
 				</div>
 			</form>
