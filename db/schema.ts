@@ -5,6 +5,8 @@ export const user = pgTable("user", {
 	name: text("name").notNull(),
 	email: text("email").notNull().unique(),
 	emailVerified: boolean("emailVerified").notNull(),
+	phoneNumber: text("phoneNumber"),
+	phoneNumberVerified: boolean("phoneNumberVerified").notNull().default(false),
 	image: text("image"),
 	createdAt: timestamp("createdAt").notNull(),
 	updatedAt: timestamp("updatedAt").notNull(),
@@ -39,4 +41,12 @@ export const verification = pgTable("verification", {
 	identifier: text("identifier").notNull(),
 	value: text("value").notNull(),
 	expiresAt: timestamp("expiresAt").notNull(),
+	createdAt: timestamp("createdAt"),
+});
+
+export const jwks = pgTable("jwks", {
+	id: text("id").primaryKey(),
+	publicKey: text("publicKey").notNull(),
+	privateKey: text("privateKey").notNull(),
+	createdAt: timestamp("createdAt").notNull(),
 });

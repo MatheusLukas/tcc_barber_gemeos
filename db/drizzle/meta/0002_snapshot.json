@@ -1,6 +1,6 @@
 {
-  "id": "690b4274-c753-4776-95af-7a56e208609a",
-  "prevId": "547353ec-c55c-43c1-a466-887ec14905b8",
+  "id": "8d03ea97-068c-4e5d-8dea-afd6620e0ab7",
+  "prevId": "690b4274-c753-4776-95af-7a56e208609a",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -217,7 +217,8 @@
           "name": "phoneNumberVerified",
           "type": "boolean",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": false
         },
         "image": {
           "name": "image",
