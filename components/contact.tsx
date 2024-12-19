@@ -56,7 +56,7 @@ export function Contact() {
 				{itemsContact.map((item) => (
 					<div
 						key={item.label}
-						className="flex items-center md:justify-center justify-start p-1 md:p-4 flex-col md:min-h-28 h-full"
+						className="flex items-center md:justify-center justify-start p-4 flex-col md:min-h-28 h-full"
 					>
 						<div className="flex md:flex-row flex-col items-center gap-2">
 							<item.icon className="md:size-6 size-5 text-primary" />
@@ -72,7 +72,7 @@ export function Contact() {
 						)}
 					</div>
 				))}
-				<div className="flex md:flex-row flex-col items-center justify-center p-4 md:min-h-28 h-full bg-primary gap-6">
+				<div className="flex md:flex-row flex-col items-center justify-between p-4 md:min-h-28 h-full bg-primary gap-6">
 					{iconsLink.map((item) => (
 						<Link key={item.href} href={item.href}>
 							<item.icon className="md:size-6 size-5 text-white hover:scale-125 transition-transform" />

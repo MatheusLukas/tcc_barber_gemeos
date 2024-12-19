@@ -7,14 +7,14 @@ import {
 	SheetTrigger,
 	handleCloseSheet,
 } from "@/components/ui/sheet";
-import { signOut, useSession } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Menu, User2, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { DropdownUserMenu } from "./dropdown-user-menu";
 import { ModeToggle } from "./mode-toggle";
 import { DialogTitle } from "./ui/dialog";
 
@@ -74,13 +74,15 @@ export function Navbar() {
 			)}
 		>
 			<div className="flex items-center justify-between w-full container">
-				<Image
-					className="size-16"
-					src="/logo.svg"
-					alt="Logo"
-					width={100}
-					height={100}
-				/>
+				<Link href="/">
+					<Image
+						className="size-16"
+						src="/logo.svg"
+						alt="Logo"
+						width={100}
+						height={100}
+					/>
+				</Link>
 				<div className="md:block hidden">
 					<NavbarDesktop />
 				</div>
@@ -107,8 +109,8 @@ function NavbarDesktop() {
 			<Button className="hover:scale-105 transition-transform group">
 				Agendar <ArrowUpRight />
 			</Button>
-			<ButtonLogin />
 			<ModeToggle />
+			<ButtonLogin />
 		</div>
 	);
 }
@@ -147,8 +149,8 @@ function NavbarMobile() {
 					<Button className="hover:scale-105 transition-transform group">
 						Agendar <ArrowUpRight />
 					</Button>
-					<ButtonLogin />
 					<ModeToggle />
+					<ButtonLogin />
 				</div>
 				<SheetClose className="absolute top-8 right-8">
 					<X className="size-6" />
@@ -161,7 +163,6 @@ function NavbarMobile() {
 
 function ButtonLogin() {
 	const { data: session } = useSession();
-	const router = useRouter();
 	return !session ? (
 		<Button
 			variant="secondary"
@@ -173,20 +174,6 @@ function ButtonLogin() {
 			</Link>
 		</Button>
 	) : (
-		<Button
-			variant="secondary"
-			className="hover:scale-105 transition-transform group"
-			onClick={async () => {
-				await signOut({
-					fetchOptions: {
-						onSuccess() {
-							router.push("/");
-						},
-					},
-				});
-			}}
-		>
-			Logout
-		</Button>
+		<DropdownUserMenu />
 	);
 }

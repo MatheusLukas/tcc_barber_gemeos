@@ -1,4 +1,4 @@
-import { CardResetPassword } from "../_components/card-reset-password";
+import { CardResetPassword } from "../components/card-reset-password";
 
 export default function Home() {
 	return (
