@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { FormSignIn } from "../_components/form-signin";
-import { Lens } from "../_components/lens";
+import { FormSignIn } from "../components/form-signin";
+import { Lens } from "../components/lens";
 
 export default function Home() {
 	return (
