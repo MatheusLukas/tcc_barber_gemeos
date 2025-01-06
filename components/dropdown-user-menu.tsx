@@ -24,7 +24,7 @@ export function DropdownUserMenu() {
 				</Avatar>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
-				<DropdownMenuLabel>Meu prefil</DropdownMenuLabel>
+				<DropdownMenuLabel>Meu perfil</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem onClick={() => router.push("/account")}>
 					<CircleUserRound size={20} />
