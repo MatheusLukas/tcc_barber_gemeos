@@ -9,9 +9,11 @@ import { userExist } from "@/app/server/userExist";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { ButtonGoogleLogin } from "./button-google-login";
 import { Input } from "./input";
 import { Label } from "./label";
 import { DialogForgetPassword } from "./modal-forget-password";
@@ -25,6 +27,8 @@ type schemaLoginType = z.infer<typeof schemaLogin>;
 
 export function FormSignIn() {
 	const router = useRouter();
+	const formId = useId();
+	const [isLoading, setIsLoading] = useState(false);
 	const {
 		register,
 		handleSubmit,
@@ -34,6 +38,7 @@ export function FormSignIn() {
 	});
 
 	const onSubmit = async (data: schemaLoginType) => {
+		setIsLoading(true);
 		const userExisting = await userExist(data.email);
 
 		if (userExisting.length === 0) {
@@ -79,6 +84,7 @@ export function FormSignIn() {
 					: "Erro ao logar usuário ";
 			},
 		});
+		setIsLoading(true);
 	};
 
 	const words = [
@@ -106,6 +112,7 @@ export function FormSignIn() {
 			<form
 				className="w-full flex flex-col gap-4 max-w-sm"
 				onSubmit={handleSubmit(onSubmit)}
+				id={formId}
 			>
 				<div className="flex flex-col gap-6 mt-4">
 					<div>
@@ -136,7 +143,12 @@ export function FormSignIn() {
 				<div className="self-end">
 					<DialogForgetPassword />
 				</div>
-				<Button className="py-5" type="submit">
+				<Button
+					disabled={isLoading}
+					form={formId}
+					className="py-5 disabled:cursor-not-allowed"
+					type="submit"
+				>
 					Log In
 				</Button>
 				<div className="space-y-4">
@@ -145,8 +157,8 @@ export function FormSignIn() {
 						<p className="whitespace-nowrap text-muted-text">ou continue com</p>
 						<hr className="w-full bg-muted-text h-0.5" />
 					</div>
-					<div className="w-full py-2 bg-muted rounded-md hover:cursor-not-allowed select-none">
-						<p className="text-center">COMING SOON...</p>
+					<div className="w-full bg-muted rounded-md hover:cursor-not-allowed select-none">
+						<ButtonGoogleLogin />
 					</div>
 				</div>
 				<div className="flex items-center justify-center gap-1">

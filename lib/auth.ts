@@ -18,6 +18,22 @@ export const auth = betterAuth({
 			jwks,
 		},
 	}),
+	user: {
+		additionalFields: {
+			phoneNumber: {
+				type: "string",
+			},
+			phoneNumberVerified: {
+				type: "boolean",
+			},
+		},
+	},
+	socialProviders: {
+		google: {
+			clientId: process.env.GOOGLE_CLIENT_ID as string,
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+		},
+	},
 	emailAndPassword: {
 		enabled: true,
 		minPasswordLength: 6,
@@ -67,3 +83,5 @@ export const auth = betterAuth({
 		// }),
 	],
 });
+
+type Session = typeof auth.$Infer.Session;

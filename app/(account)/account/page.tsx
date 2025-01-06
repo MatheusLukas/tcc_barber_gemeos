@@ -1,11 +1,11 @@
 import { Navbar } from "@/components/navbar";
-import { FileUpload } from "@/components/ui/file-upload-3d";
+import { Account } from "../components/account";
 
 export default function Home() {
 	return (
 		<div>
 			<Navbar />
-			<FileUpload />
+			<Account />
 		</div>
 	);
 }
