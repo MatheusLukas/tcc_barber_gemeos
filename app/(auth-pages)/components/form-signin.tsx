@@ -5,7 +5,7 @@ import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 import { signIn } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { userExist } from "@/app/server/userExist";
+import { userExist } from "@/server/userExist";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

@@ -10,6 +10,7 @@ export const {
 	verifyEmail,
 	resetPassword,
 	forgetPassword,
+	phoneNumber,
 } = createAuthClient({
 	baseURL: "http://localhost:3000/",
 	plugins: [phoneNumberClient()],

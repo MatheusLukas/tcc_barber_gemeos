@@ -1,4 +1,3 @@
-import { userExist } from "@/app/server/userExist";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -10,6 +9,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { forgetPassword } from "@/lib/auth-client";
+import { userExist } from "@/server/userExist";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useId } from "react";
 import { useForm } from "react-hook-form";

@@ -1,6 +1,8 @@
 import { cn } from "@/lib/utils";
 import * as motion from "framer-motion/client";
+import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import { Button } from "./ui/button";
 import {
 	Table,
 	TableBody,
@@ -17,28 +19,28 @@ const servicesPrimary = [
 		value: "R$ 30,00",
 	},
 	{
-		type: "Corte 2 pentea",
-		value: "R$ 30,00",
+		type: "Social",
+		value: "R$ 35,00",
 	},
 	{
-		type: "Corte 3 pentea",
-		value: "R$ 30,00",
+		type: "Disfarçado 0",
+		value: "R$ 35,00",
 	},
 	{
-		type: "Corte 4 pentea",
-		value: "R$ 30,00",
+		type: "Navalhado",
+		value: "R$ 35,00",
 	},
 	{
-		type: "Corte 5 pentea",
-		value: "R$ 30,00",
+		type: "Sobrancelha",
+		value: "R$ 10,00",
 	},
 	{
-		type: "Corte 6 pentea",
-		value: "R$ 30,00",
+		type: "Barba",
+		value: "R$ 20,00",
 	},
 	{
-		type: "Corte 7 pentea",
-		value: "R$ 30,00",
+		type: "Barba Desenhada",
+		value: "R$ 25,00",
 	},
 ];
 const servicesSecondary = [
@@ -47,28 +49,28 @@ const servicesSecondary = [
 		value: "R$ 30,00",
 	},
 	{
-		type: "Corte 2 pentea",
-		value: "R$ 30,00",
+		type: "Social",
+		value: "R$ 35,00",
 	},
 	{
-		type: "Corte 3 pentea",
-		value: "R$ 30,00",
+		type: "Disfarçado 0",
+		value: "R$ 35,00",
 	},
 	{
-		type: "Corte 4 pentea",
-		value: "R$ 30,00",
+		type: "Navalhado",
+		value: "R$ 40,00",
 	},
 	{
-		type: "Corte 5 pentea",
-		value: "R$ 30,00",
+		type: "Sobrancelha",
+		value: "R$ 10,00",
 	},
 	{
-		type: "Corte 6 pentea",
-		value: "R$ 30,00",
+		type: "Barba",
+		value: "R$ 20,00",
 	},
 	{
-		type: "Corte 7 pentea",
-		value: "R$ 30,00",
+		type: "Barba Desenhada",
+		value: "R$ 25,00",
 	},
 ];
 
@@ -93,12 +95,12 @@ export function OurServices() {
 				quality={100}
 			/>
 			<div className="absolute inset-0 bg-black opacity-50 h-[700px]" />
-			<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 space-y-4 max-w-3xl">
+			<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 space-y-4 flex flex-col items-center justify-center">
 				<p className="text-4xl font-bold text-center text-white">
 					Nossos serviços
 				</p>
-				<Tabs defaultValue="early-week" className="w-full">
-					<TabsList className="w-full bg-background gap-6">
+				<Tabs defaultValue="early-week" className="max-w-[800px]">
+					<TabsList className="w-full !bg-transparent gap-6">
 						<TabsTrigger
 							className="w-full bg-primary/80 data-[state=active]:bg-primary"
 							value="early-week"
@@ -106,7 +108,7 @@ export function OurServices() {
 							Segunda &bull; Terça &bull; Quarta
 						</TabsTrigger>
 						<TabsTrigger
-							className="w-full bg-primary/80 data-[state=active]:bg-primary"
+							className="w-full bg-primary/90 data-[state=active]:bg-primary"
 							value="end-week"
 						>
 							Quinta &bull; Sexta &bull; Sábado
@@ -115,9 +117,9 @@ export function OurServices() {
 					<TabsContent value="early-week">
 						<Table>
 							<TableHeader>
-								<TableRow className="bg-muted-foreground *:text-black *:pointer-events-none *:text-center">
-									<TableHead>Serviço</TableHead>
-									<TableHead>Preço</TableHead>
+								<TableRow className="bg-[#262626] *:text-white *:pointer-events-none *:text-center border-none">
+									<TableHead className="w-[400px]">Serviço</TableHead>
+									<TableHead className="w-[400px]">Preço</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
@@ -125,14 +127,14 @@ export function OurServices() {
 									<TableRow
 										key={service.type}
 										className={cn(
-											index % 2 === 0 ? "bg-background" : "bg-muted-foreground",
-											"pointer-events-none",
+											index % 2 === 0 ? "bg-black" : "bg-[#262626]",
+											"pointer-events-none border-none",
 										)}
 									>
-										<TableCell className="text-center">
+										<TableCell className="text-center text-white">
 											{service.type}
 										</TableCell>
-										<TableCell className="text-center">
+										<TableCell className="text-center text-white">
 											{service.value}
 										</TableCell>
 									</TableRow>
@@ -140,12 +142,12 @@ export function OurServices() {
 							</TableBody>
 						</Table>
 					</TabsContent>
-					<TabsContent value="end-week">
+					<TabsContent className="overflow-x-auto" value="end-week">
 						<Table>
 							<TableHeader>
-								<TableRow className="bg-muted-foreground *:text-black *:pointer-events-none *:text-center">
-									<TableHead>Serviço</TableHead>
-									<TableHead>Preço</TableHead>
+								<TableRow className="bg-[#262626] *:text-white *:pointer-events-none *:text-center border-none">
+									<TableHead className="w-[400px]">Serviço</TableHead>
+									<TableHead className="w-[400px]">Preço</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
@@ -153,18 +155,33 @@ export function OurServices() {
 									<TableRow
 										key={service.type}
 										className={cn(
-											index % 2 === 0 ? "bg-background" : "bg-muted-foreground",
-											"pointer-events-none *:text-center",
+											index % 2 === 0 ? "bg-black" : "bg-[#262626]",
+											"pointer-events-none *:text-center border-none",
 										)}
 									>
-										<TableCell>{service.type}</TableCell>
-										<TableCell>{service.value}</TableCell>
+										<TableCell className="text-center text-white">
+											{service.type}
+										</TableCell>
+										<TableCell className="text-center text-white">
+											{service.value}
+										</TableCell>
 									</TableRow>
 								))}
 							</TableBody>
 						</Table>
 					</TabsContent>
 				</Tabs>
+
+				<div className="max-w-sm space-y-2">
+					<p className="text-xl text-white text-pretty text-center">
+						Aproveite nossos preços e agende seu corte com um dos nossos
+						barbeiros
+					</p>
+					<Button className="w-full group">
+						Agendar
+						<ArrowUpRight className="group-hover:translate-x-2 transition" />
+					</Button>
+				</div>
 			</div>
 		</motion.div>
 	);
