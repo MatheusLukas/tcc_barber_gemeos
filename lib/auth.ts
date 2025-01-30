@@ -1,11 +1,12 @@
-import { sendEmailConfirm } from "@/app/server/sendEmail";
 import { db } from "@/db"; // your drizzle instance
 import { account, jwks, session, user, verification } from "@/db/schema";
+import { sendEmailConfirm } from "@/server/sendEmail";
 import { sendEmailConfirmation } from "@/templates/confirm-email";
+import { sendPhoneConfirmation } from "@/templates/confirm-phone";
 import { ResetPassword } from "@/templates/reset-password";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { bearer, jwt } from "better-auth/plugins";
+import { bearer, jwt, phoneNumber } from "better-auth/plugins";
 
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
@@ -25,6 +26,10 @@ export const auth = betterAuth({
 			},
 			phoneNumberVerified: {
 				type: "boolean",
+			},
+			role: {
+				type: "string",
+				defaultValue: "user",
 			},
 		},
 	},
@@ -71,16 +76,16 @@ export const auth = betterAuth({
 			},
 		}),
 		bearer(),
-		// phoneNumber({
-		// 	sendOTP: async ({ phoneNumber, code }, request) => {
-		// 		console.log(request, "teste aqui");
-		// 		await sendEmailConfirm({
-		// 			email: "matheuslukas636@gmail.com",
-		// 			subject: "Verifique seu email",
-		// 			TemplateEmailHTML: sendPhoneConfirmation({ phoneNumber, code }),
-		// 		});
-		// 	},
-		// }),
+		phoneNumber({
+			sendOTP: async ({ phoneNumber, code }, request) => {
+				console.log(request, "teste aqui");
+				await sendEmailConfirm({
+					email: "matheuslukas636@gmail.com",
+					subject: "Verifique seu email",
+					TemplateEmailHTML: sendPhoneConfirmation({ phoneNumber, code }),
+				});
+			},
+		}),
 	],
 });
 

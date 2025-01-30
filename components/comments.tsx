@@ -64,7 +64,7 @@ export function Comments() {
 			{comments.map((comment) => (
 				<div
 					key={comment.name}
-					className="w-full h-44 bg-muted rounded-lg p-4 flex flex-col gap-4"
+					className="w-full h-44 bg-muted rounded-lg p-4 flex flex-col gap-4 "
 				>
 					<div className="flex gap-4">
 						<Image

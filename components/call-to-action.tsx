@@ -13,7 +13,7 @@ export function CallToAction() {
 				transition: { duration: 0.3, delay: 0.2 },
 			}}
 			viewport={{ once: true, margin: "-64px" }}
-			className="bg-muted flex items-center justify-center py-10 gap-10"
+			className="bg-muted flex flex-col md:flex-row items-center justify-center py-10 md:gap-10 gap-4"
 		>
 			<Image
 				alt="Gemeos"
@@ -22,9 +22,11 @@ export function CallToAction() {
 				height={1080}
 				className="rounded-full size-60 object-cover"
 			/>
-			<div className="max-w-md space-y-4">
-				<p className="text-4xl font-bold">Hora de renovar o visual!</p>
-				<p className="text-xl text-pretty">
+			<div className="max-w-md md:space-y-4 space-y-2 px-8 md:px-0">
+				<p className="md:text-4xl text-3xl font-bold md:text-left text-center">
+					Hora de renovar o visual!
+				</p>
+				<p className="md:text-xl text-lg text-pretty md:text-left text-center">
 					Agende agora mesmo o seu corte de cabelo com nossos barbeiros
 					especialistas. Reserve seu horário e fique no estilo que você merece
 				</p>

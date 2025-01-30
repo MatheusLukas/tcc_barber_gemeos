@@ -95,6 +95,7 @@ export function Navbar() {
 }
 
 function NavbarDesktop() {
+	const { data: session } = useSession();
 	return (
 		<div className="flex items-center gap-4">
 			{itemsNav.map((items) => (
@@ -106,16 +107,23 @@ function NavbarDesktop() {
 					<hr className="w-0 group-hover:w-full  border-primary group-hover:bg-primary h-0.5 duration-500" />
 				</div>
 			))}
-			<Button className="hover:scale-105 transition-transform group">
-				Agendar <ArrowUpRight />
+			<Button asChild className="hover:scale-105 transition-transform group">
+				<Link href="/schedule">
+					Agendar <ArrowUpRight />
+				</Link>
 			</Button>
-			<ModeToggle />
-			<ButtonLogin />
+			<div className={cn(session ? "order-1" : "order-2")}>
+				<ModeToggle />
+			</div>
+			<div className={cn(session ? "order-2" : "order-1")}>
+				<ButtonLogin />
+			</div>
 		</div>
 	);
 }
 
 function NavbarMobile() {
+	const { data: session } = useSession();
 	function navigationClick(link: string) {
 		const href = document.getElementById(link);
 		href?.scrollIntoView({
@@ -149,8 +157,12 @@ function NavbarMobile() {
 					<Button className="hover:scale-105 transition-transform group">
 						Agendar <ArrowUpRight />
 					</Button>
-					<ModeToggle />
-					<ButtonLogin />
+					<div className={cn(session ? "order-1" : "order-2")}>
+						<ModeToggle />
+					</div>
+					<div className={cn(session ? "order-2" : "order-1")}>
+						<ButtonLogin />
+					</div>
 				</div>
 				<SheetClose className="absolute top-8 right-8">
 					<X className="size-6" />

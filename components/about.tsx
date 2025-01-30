@@ -65,7 +65,7 @@ export function About() {
 							className="lg:w-72 md:w-60 w-48"
 						/>
 					</div>
-					<CardContainer className="bg-muted p-3 md:mt-0 mt-14">
+					<CardContainer className="bg-muted p-3">
 						<CardBody className="w-fit h-fit">
 							<Image
 								src="/gemeos-barbers.jpeg"

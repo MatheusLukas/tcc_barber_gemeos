@@ -10,28 +10,28 @@ export function Gallery() {
 					alt="Barbeiro"
 					width={1920}
 					height={1080}
-					className="size-44"
+					className="xl:size-44 size-32"
 				/>
 				<Image
 					src="/barbeiro.jpg"
 					alt="Barbeiro"
 					width={1920}
 					height={1080}
-					className="size-44"
+					className="xl:size-44 size-32"
 				/>
 				<Image
 					src="/barbeiro.jpg"
 					alt="Barbeiro"
 					width={1920}
 					height={1080}
-					className="size-44"
+					className="xl:size-44 size-32"
 				/>
 				<Image
 					src="/barbeiro.jpg"
 					alt="Barbeiro"
 					width={1920}
 					height={1080}
-					className="size-44"
+					className="xl:size-44 size-32"
 				/>
 			</Marquee>
 
@@ -41,28 +41,28 @@ export function Gallery() {
 					alt="Barbeiro"
 					width={1920}
 					height={1080}
-					className="size-44"
+					className="xl:size-44 size-32"
 				/>
 				<Image
 					src="/barbeiro.jpg"
 					alt="Barbeiro"
 					width={1920}
 					height={1080}
-					className="size-44"
+					className="xl:size-44 size-32"
 				/>
 				<Image
 					src="/barbeiro.jpg"
 					alt="Barbeiro"
 					width={1920}
 					height={1080}
-					className="size-44"
+					className="xl:size-44 size-32"
 				/>
 				<Image
 					src="/barbeiro.jpg"
 					alt="Barbeiro"
 					width={1920}
 					height={1080}
-					className="size-44"
+					className="xl:size-44 size-32"
 				/>
 			</Marquee>
 
@@ -72,28 +72,28 @@ export function Gallery() {
 					alt="Barbeiro"
 					width={1920}
 					height={1080}
-					className="size-44"
+					className="xl:size-44 size-32"
 				/>
 				<Image
 					src="/barbeiro.jpg"
 					alt="Barbeiro"
 					width={1920}
 					height={1080}
-					className="size-44"
+					className="xl:size-44 size-32"
 				/>
 				<Image
 					src="/barbeiro.jpg"
 					alt="Barbeiro"
 					width={1920}
 					height={1080}
-					className="size-44"
+					className="xl:size-44 size-32"
 				/>
 				<Image
 					src="/barbeiro.jpg"
 					alt="Barbeiro"
 					width={1920}
 					height={1080}
-					className="size-44"
+					className="xl:size-44 size-32"
 				/>
 			</Marquee>
 		</div>
