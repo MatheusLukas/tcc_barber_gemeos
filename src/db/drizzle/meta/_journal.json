@@ -1,0 +1,55 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1732294197259,
+      "tag": "0000_lean_carmella_unuscione",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1733934209756,
+      "tag": "0001_add_phone_number",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1737491882319,
+      "tag": "0005_initial_database",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1737493675937,
+      "tag": "0006_some_modifications",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1737493712221,
+      "tag": "0007_barber_id_to_text",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1738267414710,
+      "tag": "0008_remove_jwts_model",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1739820178780,
+      "tag": "0009_jazzy_ben_parker",
+      "breakpoints": true
+    }
+  ]
+}
