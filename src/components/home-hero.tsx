@@ -13,6 +13,7 @@ export function HomeHero() {
 					width={1920}
 					height={1080}
 					quality={100}
+					priority
 				/>
 				<div className="absolute inset-0 bg-black opacity-50 max-h-[900px]" />
 				<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center flex-col *:font-bold *:text-4xl md:*:text-6xl *:animate-fade-left animate-delay-300 text-white">
