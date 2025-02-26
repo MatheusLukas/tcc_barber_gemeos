@@ -48,6 +48,7 @@ type Props = {
 export function Navbar() {
 	const [isScrolled, setIsScrolled] = useState(false);
 	const { data: session } = useSession();
+	console.log(session);
 
 	useEffect(() => {
 		if (window.scrollY < 100) {

@@ -45,7 +45,6 @@ export function FormSignUp() {
 							email: data.email,
 							password: data.password,
 							image: undefined,
-							phoneNumberVerified: false,
 						},
 						{
 							onRequest: () => {

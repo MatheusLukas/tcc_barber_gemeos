@@ -23,6 +23,7 @@ import {
 	InputOTPSlot,
 } from "@/src/components/ui/input-otp";
 import { phoneNumber } from "@/src/lib/auth-client";
+import { queryClient } from "@/src/lib/query-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useId } from "react";
 import { useForm } from "react-hook-form";
@@ -61,8 +62,8 @@ export function ModalConfirmPhoneOtp({
 			phoneNumber: phoneNumberUser,
 			code: data.pin,
 		});
-		console.log(isVerified, "isVerified");
 		if (isVerified.data) {
+			queryClient.invalidateQueries(["getUser"]);
 			toast.success("Telefone verificado com sucesso!");
 			onClose();
 		} else {
@@ -77,7 +78,7 @@ export function ModalConfirmPhoneOtp({
 				<AlertDialogHeader>
 					<AlertDialogTitle>Confirmação de Telefone</AlertDialogTitle>
 					<AlertDialogDescription>
-						Enviamos um email para: <span className="font-bold">{email}</span>
+						Enviamos um email para: <span className="font-bold">{email}</span>{" "}
 						com o código de verificação.
 					</AlertDialogDescription>
 					<Form {...form}>

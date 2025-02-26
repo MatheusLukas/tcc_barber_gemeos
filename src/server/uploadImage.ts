@@ -9,6 +9,7 @@ type Props = {
 };
 
 export async function uploadImage({ url, id }: Props) {
+	console.log("uploadImage", url, id);
 	try {
 		await db
 			.update(user)
