@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Animation } from "./animation";
 import { CardAbout } from "./card-about";
-import { CardBody, CardContainer } from "./ui/3d-card";
+import { CardBody, CardContainer, CardItem } from "./ui/3d-card";
 import BlurFade from "./ui/blur-fade";
 
 const itemsAbout = [
@@ -59,7 +59,7 @@ export function About() {
 					direction="right"
 					className="lg:flex block relative lg:px-24"
 				>
-					<div className="bg-muted p-3 shadow-lg absolute md:left-48 md:top-4 lg:top-0 xl:left-80 rotate-12 -z-10 lg:block hidden">
+					<div className="bg-muted p-3 shadow-lg absolute md:left-48 md:top-4 lg:top-7 xl:left-80 rotate-12 -z-10 lg:block hidden">
 						<Image
 							src="/barbers.jpeg"
 							alt="About"
@@ -70,15 +70,17 @@ export function About() {
 						/>
 					</div>
 					<CardContainer className="bg-muted p-3">
-						<CardBody className="w-fit h-fit">
-							<Image
-								src="/gemeos-barbers.jpeg"
-								alt="About"
-								width={1920}
-								height={1080}
-								quality={100}
-								className="lg:w-72 md:w-72 w-64"
-							/>
+						<CardBody className="size-fit">
+							<CardItem translateZ={20}>
+								<Image
+									src="/gemeos-barbers.jpeg"
+									alt="About"
+									width={1920}
+									height={1080}
+									quality={100}
+									className="lg:w-72 md:w-72 w-64"
+								/>
+							</CardItem>
 						</CardBody>
 					</CardContainer>
 				</Animation>

@@ -4,6 +4,7 @@ import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
 import { phoneNumber, useSession } from "@/src/lib/auth-client";
+import { queryClient } from "@/src/lib/query-client";
 import { cn } from "@/src/lib/utils";
 import { getUser } from "@/src/server/getUser";
 import { updateUserComunication } from "@/src/server/updateUserComunication";
@@ -13,6 +14,7 @@ import * as motion from "framer-motion/client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { AlertPhoneNotVerified } from "./alert-phone-not-verified";
 import { EditButton } from "./editButton";
@@ -58,7 +60,7 @@ export function Account() {
 	if (!userId) return null;
 
 	const onSubmit = async (data: schemaInformationsType) => {
-		await updateUserComunication({
+		const updatePromise = updateUserComunication({
 			name: data.name,
 			email: data.email,
 			phoneNumber: data.phone,
@@ -68,6 +70,14 @@ export function Account() {
 			setPhoneNumberUser(data.phone);
 			setOpen(true);
 		}
+		toast
+			.promise(updatePromise, {
+				loading: "Atualizando...",
+				success: "Informações atualizadas com sucesso!",
+				error: "Erro ao atualizar informações!",
+			})
+			.unwrap()
+			.then(() => queryClient.invalidateQueries(["getUser"]));
 	};
 
 	const handleCloseModal = () => {

@@ -6,7 +6,9 @@ import { Button } from "./ui/button";
 import {
 	Table,
 	TableBody,
+	TableCaption,
 	TableCell,
+	TableFooter,
 	TableHead,
 	TableHeader,
 	TableRow,
@@ -74,6 +76,51 @@ const servicesSecondary = [
 	},
 ];
 
+const invoices = [
+	{
+		invoice: "INV001",
+		paymentStatus: "Paid",
+		totalAmount: "$250.00",
+		paymentMethod: "Credit Card",
+	},
+	{
+		invoice: "INV002",
+		paymentStatus: "Pending",
+		totalAmount: "$150.00",
+		paymentMethod: "PayPal",
+	},
+	{
+		invoice: "INV003",
+		paymentStatus: "Unpaid",
+		totalAmount: "$350.00",
+		paymentMethod: "Bank Transfer",
+	},
+	{
+		invoice: "INV004",
+		paymentStatus: "Paid",
+		totalAmount: "$450.00",
+		paymentMethod: "Credit Card",
+	},
+	{
+		invoice: "INV005",
+		paymentStatus: "Paid",
+		totalAmount: "$550.00",
+		paymentMethod: "PayPal",
+	},
+	{
+		invoice: "INV006",
+		paymentStatus: "Pending",
+		totalAmount: "$200.00",
+		paymentMethod: "Bank Transfer",
+	},
+	{
+		invoice: "INV007",
+		paymentStatus: "Unpaid",
+		totalAmount: "$300.00",
+		paymentMethod: "Credit Card",
+	},
+];
+
 export function OurServices() {
 	return (
 		<div className="relative mt-28">
@@ -108,65 +155,71 @@ export function OurServices() {
 								Quinta &bull; Sexta &bull; Sábado
 							</TabsTrigger>
 						</TabsList>
-						<TabsContent value="early-week">
-							<Table>
-								<TableHeader>
-									<TableRow className="bg-[#262626] *:text-white *:pointer-events-none *:text-center border-none">
-										<TableHead className="w-[400px]">Serviço</TableHead>
-										<TableHead className="w-[400px]">Preço</TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{servicesPrimary.map((service, index) => (
-										<TableRow
-											key={service.type}
-											className={cn(
-												index % 2 === 0 ? "bg-black" : "bg-[#262626]",
-												"pointer-events-none border-none",
-											)}
-										>
-											<TableCell className="text-center text-white">
-												{service.type}
-											</TableCell>
-											<TableCell className="text-center text-white">
-												{service.value}
-											</TableCell>
+						<Animation direction="right" key="early-week">
+							<TabsContent value="early-week">
+								<Table>
+									<TableCaption>A list of your recent invoices.</TableCaption>
+									<TableHeader>
+										<TableRow>
+											<TableHead className="w-[100px]">Invoice</TableHead>
+											<TableHead>Status</TableHead>
+											<TableHead>Method</TableHead>
+											<TableHead className="text-right">Amount</TableHead>
 										</TableRow>
-									))}
-								</TableBody>
-							</Table>
-						</TabsContent>
-						<TabsContent className="overflow-x-auto" value="end-week">
-							<Table>
-								<TableHeader>
-									<TableRow className="bg-[#262626] *:text-white *:pointer-events-none *:text-center border-none">
-										<TableHead className="w-[400px]">Serviço</TableHead>
-										<TableHead className="w-[400px]">Preço</TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{servicesSecondary.map((service, index) => (
-										<TableRow
-											key={service.type}
-											className={cn(
-												index % 2 === 0 ? "bg-black" : "bg-[#262626]",
-												"pointer-events-none *:text-center border-none",
-											)}
-										>
-											<TableCell className="text-center text-white">
-												{service.type}
-											</TableCell>
-											<TableCell className="text-center text-white">
-												{service.value}
-											</TableCell>
+									</TableHeader>
+									<TableBody>
+										{invoices.map((invoice) => (
+											<TableRow key={invoice.invoice}>
+												<TableCell className="font-medium">
+													{invoice.invoice}
+												</TableCell>
+												<TableCell>{invoice.paymentStatus}</TableCell>
+												<TableCell>{invoice.paymentMethod}</TableCell>
+												<TableCell className="text-right">
+													{invoice.totalAmount}
+												</TableCell>
+											</TableRow>
+										))}
+									</TableBody>
+									<TableFooter>
+										<TableRow>
+											<TableCell colSpan={3}>Total</TableCell>
+											<TableCell className="text-right">$2,500.00</TableCell>
 										</TableRow>
-									))}
-								</TableBody>
-							</Table>
-						</TabsContent>
+									</TableFooter>
+								</Table>
+							</TabsContent>
+							<TabsContent value="end-week">
+								<Table>
+									<TableHeader>
+										<TableRow className="bg-[#262626] *:text-white *:pointer-events-none *:text-center border-none">
+											<TableHead>Serviço</TableHead>
+											<TableHead>Preço</TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody>
+										{servicesSecondary.map((service, index) => (
+											<TableRow
+												key={service.type}
+												className={cn(
+													index % 2 === 0 ? "bg-black" : "bg-[#262626]",
+													"pointer-events-none *:text-center border-none",
+												)}
+											>
+												<TableCell className="text-center text-white">
+													{service.type}
+												</TableCell>
+												<TableCell className="text-center text-white">
+													{service.value}
+												</TableCell>
+											</TableRow>
+										))}
+									</TableBody>
+								</Table>
+							</TabsContent>
+						</Animation>
 					</Tabs>
 				</Animation>
-
 				<div className="max-w-sm space-y-4">
 					<Animation once direction="right">
 						<p className="text-xl text-white text-pretty text-center">

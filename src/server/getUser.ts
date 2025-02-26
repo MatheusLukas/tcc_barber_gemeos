@@ -4,7 +4,6 @@ import { user } from "@/src/db/schema";
 import { eq } from "drizzle-orm";
 
 export async function getUser(userId: string | undefined) {
-	console.log("here", userId);
 	if (!userId) return null;
 	return await db
 		.select()

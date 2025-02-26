@@ -20,6 +20,7 @@ export function Animation({
 	margin = "-32px",
 	once = false,
 	className,
+	...props
 }: Props) {
 	const directionMap = {
 		up: { start: { y: -50 }, end: { y: 0 } },
@@ -38,6 +39,7 @@ export function Animation({
 			}}
 			viewport={{ once, margin }}
 			className={cn(className)}
+			{...props}
 		>
 			{children}
 		</motion.div>

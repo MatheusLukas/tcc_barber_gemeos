@@ -4,6 +4,7 @@ import { CommentsAndGallery } from "@/src/components/comments-and-gallery";
 import { HomeHero } from "@/src/components/home-hero";
 import { Navbar } from "@/src/components/navbar";
 import { OurBarbers } from "@/src/components/our-barbers";
+import { OurServices } from "@/src/components/our-services";
 
 export default function Home() {
 	return (
@@ -11,7 +12,7 @@ export default function Home() {
 			<Navbar />
 			<HomeHero />
 			<About />
-			{/* <OurServices /> */}
+			<OurServices />
 			<OurBarbers />
 			<CommentsAndGallery />
 			<CallToAction />

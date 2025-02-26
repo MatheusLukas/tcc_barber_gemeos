@@ -14,7 +14,10 @@ export function EditButton({ userId }: Props) {
 	const { mutateAsync, isLoading } = useMutation({
 		mutationKey: ["uploadImage"],
 		mutationFn: async (file: File) => {
-			const { data } = await imageUploader(file);
+			console.log(file, "file");
+			const { data, error } = await imageUploader(file);
+			console.log(error, "aqui");
+			console.log(data);
 			await uploadImage({ url: data!.url, id: userId });
 			return data;
 		},
@@ -49,6 +52,11 @@ export function EditButton({ userId }: Props) {
 						const lenght = e.target.files?.length;
 						const file = e.target.files?.[lenght! - 1];
 						if (file) {
+							const maxSize = 2 * 1024 * 1024;
+							if (file.size > maxSize) {
+								toast.error("Arquivo muito grande! O tamanho máximo é 30MB.");
+								return;
+							}
 							handleFileClick(file);
 						}
 					}}

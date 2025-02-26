@@ -349,8 +349,8 @@ export const Icons = {
 				stroke="#171717"
 			/>
 			<path d="M22.75 11.0833H5.25" stroke="#171717" />
-			<path d="M13.4167 14.5833H8.75" stroke="#171717" stroke-linecap="round" />
-			<path d="M12.25 16.9167H8.75" stroke="#171717" stroke-linecap="round" />
+			<path d="M13.4167 14.5833H8.75" stroke="#171717" strokeLinecap="round" />
+			<path d="M12.25 16.9167H8.75" stroke="#171717" strokeLinecap="round" />
 		</svg>
 	),
 };
