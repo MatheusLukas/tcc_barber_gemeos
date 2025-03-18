@@ -5,17 +5,19 @@ import { HomeHero } from "@/src/components/home-hero";
 import { Navbar } from "@/src/components/navbar";
 import { OurBarbers } from "@/src/components/our-barbers";
 import { OurServices } from "@/src/components/our-services";
+import { Footer } from "../../../components/footer";
 
 export default function Home() {
-	return (
-		<>
-			<Navbar />
-			<HomeHero />
-			<About />
-			<OurServices />
-			<OurBarbers />
-			<CommentsAndGallery />
-			<CallToAction />
-		</>
-	);
+  return (
+    <>
+      <Navbar />
+      <HomeHero />
+      <About />
+      <OurServices />
+      <OurBarbers />
+      <CommentsAndGallery />
+      <CallToAction />
+      <Footer />
+    </>
+  );
 }
