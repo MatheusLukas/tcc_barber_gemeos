@@ -180,6 +180,7 @@ export function Account() {
 				</form>
 				<ModalConfirmPhoneOtp
 					email={userData?.email ?? ""}
+					userId={userData?.id ?? ""}
 					open={open}
 					onClose={handleCloseModal}
 					phoneNumberUser={phoneNumberUser}

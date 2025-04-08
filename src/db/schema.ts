@@ -21,13 +21,16 @@ export const user = pgTable("user", {
 	id: text("id").primaryKey(),
 	name: text("name").notNull(),
 	email: text("email").notNull().unique(),
-	role: roleEnum("role").notNull(),
-	emailVerified: boolean("emailVerified").notNull(),
-	phoneNumber: text("phoneNumber"),
-	phoneNumberVerified: boolean("phoneNumberVerified").notNull().default(false),
+	emailVerified: boolean("email_verified").notNull(),
 	image: text("image"),
-	createdAt: timestamp("createdAt").notNull(),
-	updatedAt: timestamp("updatedAt").notNull(),
+	createdAt: timestamp("created_at").notNull(),
+	updatedAt: timestamp("updated_at").notNull(),
+	phoneNumber: text("phone_number"),
+	phoneNumberVerified: boolean("phone_number_verified"),
+	role: text("role"),
+	banned: boolean("banned"),
+	banReason: text("ban_reason"),
+	banExpires: timestamp("ban_expires"),
 });
 
 export const session = pgTable("session", {
@@ -41,6 +44,7 @@ export const session = pgTable("session", {
 	userId: text("user_id")
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
+	impersonatedBy: text("impersonated_by"),
 });
 
 export const account = pgTable("account", {
@@ -80,19 +84,19 @@ export const barbers = pgTable("barbers", {
 
 export const schedule = pgTable("schedule", {
 	id: uuid("id").defaultRandom().primaryKey(),
-	userId: text("userId")
+	userId: text("user_id")
 		.notNull()
 		.references(() => user.id),
-	barberId: uuid("barberId")
+	barberId: uuid("barber_id")
 		.notNull()
 		.references(() => barbers.id),
 	date: timestamp("date").notNull(),
 	type: text("type").notNull(),
 	price: doublePrecision("price").notNull(),
-	jobId: uuid("jobId")
+	jobId: uuid("job_id")
 		.notNull()
 		.references(() => jobs.id),
-	paymentMethod: text("paymentMethod").notNull(),
+	paymentMethod: text("payment_method").notNull(),
 });
 
 export const scheduleRelations = relations(schedule, ({ one }) => ({
@@ -120,6 +124,6 @@ export const stock = pgTable("stock", {
 	id: uuid("id").defaultRandom().primaryKey(),
 	name: text("name").notNull(),
 	quantity: integer("quantity").notNull(),
-	unityPrice: doublePrecision("unityPrice").notNull(),
+	unityPrice: doublePrecision("unity_price").notNull(),
 	image: text("image"),
 });
