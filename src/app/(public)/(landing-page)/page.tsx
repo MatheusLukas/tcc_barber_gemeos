@@ -1,4 +1,5 @@
 import { Navbar } from "@/src/components/navbar";
+import { Footer } from "../../../components/footer";
 import { About } from "./componentes/about";
 import { CallToAction } from "./componentes/call-to-action";
 import { CommentsAndGallery } from "./componentes/comments-and-gallery";
@@ -16,6 +17,7 @@ export default function Home() {
 			<OurBarbers />
 			<CommentsAndGallery />
 			<CallToAction />
+			<Footer />
 		</>
 	);
 }
