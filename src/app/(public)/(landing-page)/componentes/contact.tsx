@@ -1,6 +1,6 @@
+import { Animation } from "@/src/components/animation";
+import { Icons } from "@/src/components/icons";
 import Link from "next/link";
-import { Animation } from "./animation";
-import { Icons } from "./icons";
 
 const itemsContact = [
 	{

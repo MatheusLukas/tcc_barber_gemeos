@@ -57,7 +57,7 @@ export function DateTimePicker24h() {
 					)}
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="w-auto p-0">
+			<PopoverContent className="w-full">
 				<div className="sm:flex">
 					<Calendar
 						mode="single"
@@ -69,7 +69,7 @@ export function DateTimePicker24h() {
 								? `Dia: ${format(date, "MM/dd/yyyy hh:mm")}`
 								: "Selecione um dia"
 						}
-						disabled={{ before: today, from: new Date("2025/01/30") }}
+						disabled={{ before: today }}
 						fromDate={addMonths(today, -1)}
 						toDate={addMonths(today, 3)}
 						captionLayout="buttons"

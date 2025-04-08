@@ -1,5 +1,5 @@
+import Marquee from "@/src/components/ui/marquee";
 import Image from "next/image";
-import Marquee from "./ui/marquee";
 
 export function Gallery() {
 	return (

@@ -119,10 +119,7 @@ const ChoiceboxItem = ({
 			className={composeRenderProps(className, (className, renderProps) =>
 				choiceboxItemStyles({
 					...renderProps,
-					init:
-						renderProps.isSelected ||
-						renderProps.isHovered ||
-						renderProps.isFocusVisible,
+					init: renderProps.isSelected || renderProps.isFocusVisible,
 					className,
 				}),
 			)}

@@ -1,6 +1,5 @@
 "use client";
-import { signOut } from "@/src/lib/auth-client";
-import { CircleUserRound, LogOut } from "lucide-react";
+import { CircleUserRound, LockKeyhole, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
@@ -12,8 +11,16 @@ import {
 	DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
-export function DropdownUserMenu() {
+type Props = {
+	isAdmin: boolean;
+};
+
+export function DropdownUserMenu({ isAdmin }: Props) {
 	const router = useRouter();
+
+	const handleLogout = () => {
+		router.push("/logout");
+	};
 
 	return (
 		<DropdownMenu>
@@ -30,20 +37,16 @@ export function DropdownUserMenu() {
 					<CircleUserRound size={20} />
 					<span>Conta</span>
 				</DropdownMenuItem>
-				<DropdownMenuItem
-					onClick={async () => {
-						await signOut({
-							fetchOptions: {
-								onSuccess() {
-									router.push("/");
-								},
-							},
-						});
-					}}
-				>
+				<DropdownMenuItem onClick={handleLogout}>
 					<LogOut size={20} />
 					<span>Logout</span>
 				</DropdownMenuItem>
+				{isAdmin && (
+					<DropdownMenuItem onClick={() => router.push("/admin")}>
+						<LockKeyhole size={20} />
+						<span>Admin</span>
+					</DropdownMenuItem>
+				)}
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

@@ -1,4 +1,4 @@
-import { Star } from "lucide-react"; // ou outro ícone de sua preferência
+import { Star } from "lucide-react";
 
 interface RatingDisplayProps {
 	rating: number;

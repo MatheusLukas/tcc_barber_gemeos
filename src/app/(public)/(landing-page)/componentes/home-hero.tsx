@@ -1,5 +1,5 @@
+import { Animation } from "@/src/components/animation";
 import Image from "next/image";
-import { Animation } from "./animation";
 import { Contact } from "./contact";
 
 export function HomeHero() {

@@ -58,10 +58,12 @@ export function ModalConfirmPhoneOtp({
 	const formId = useId();
 
 	const onSubmit = async (data: schemaInputOtpType) => {
+		console.log(data, "data");
 		const isVerified = await phoneNumber.verify({
 			phoneNumber: phoneNumberUser,
 			code: data.pin,
 		});
+		console.log(isVerified, "isVerified");
 		if (isVerified.data) {
 			queryClient.invalidateQueries(["getUser"]);
 			toast.success("Telefone verificado com sucesso!");

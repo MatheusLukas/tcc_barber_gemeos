@@ -71,24 +71,25 @@ export const verification = pgTable("verification", {
 });
 
 export const barbers = pgTable("barbers", {
-	id: text("id").primaryKey(),
+	id: uuid("id").defaultRandom().primaryKey(),
 	name: text("name").notNull(),
 	email: text("email").notNull(),
+	image: text("image"),
 	role: roleEnum("role").notNull(),
 });
 
 export const schedule = pgTable("schedule", {
-	id: uuid("id").primaryKey(),
+	id: uuid("id").defaultRandom().primaryKey(),
 	userId: text("userId")
 		.notNull()
 		.references(() => user.id),
-	barberId: text("barberId")
+	barberId: uuid("barberId")
 		.notNull()
 		.references(() => barbers.id),
 	date: timestamp("date").notNull(),
 	type: text("type").notNull(),
 	price: doublePrecision("price").notNull(),
-	jobId: text("jobId")
+	jobId: uuid("jobId")
 		.notNull()
 		.references(() => jobs.id),
 	paymentMethod: text("paymentMethod").notNull(),
@@ -110,13 +111,13 @@ export const scheduleRelations = relations(schedule, ({ one }) => ({
 }));
 
 export const jobs = pgTable("jobs", {
-	id: text("id").primaryKey(),
+	id: uuid("id").defaultRandom().primaryKey(),
 	name: text("name").notNull(),
 	price: doublePrecision("price").notNull(),
 });
 
 export const stock = pgTable("stock", {
-	id: uuid("id").primaryKey(),
+	id: uuid("id").defaultRandom().primaryKey(),
 	name: text("name").notNull(),
 	quantity: integer("quantity").notNull(),
 	unityPrice: doublePrecision("unityPrice").notNull(),

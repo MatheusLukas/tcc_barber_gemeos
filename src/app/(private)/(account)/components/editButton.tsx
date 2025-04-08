@@ -14,12 +14,9 @@ export function EditButton({ userId }: Props) {
 	const { mutateAsync, isLoading } = useMutation({
 		mutationKey: ["uploadImage"],
 		mutationFn: async (file: File) => {
-			console.log(file, "file");
-			const { data, error } = await imageUploader(file);
-			console.log(error, "aqui");
-			console.log(data);
-			await uploadImage({ url: data!.url, id: userId });
-			return data;
+			const [data] = await imageUploader({ file: file });
+			await uploadImage({ url: data!.data!.url, id: userId });
+			return data?.data;
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries(["getUser"]);

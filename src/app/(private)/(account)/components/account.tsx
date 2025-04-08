@@ -34,10 +34,13 @@ export function Account() {
 	const [phoneNumberUser, setPhoneNumberUser] = useState("");
 	const { data } = useSession();
 	const { data: user, isLoading } = useQuery({
-		queryKey: ["getUser", data?.user.id],
-		queryFn: () => getUser(data?.user.id),
+		queryKey: ["getUser"],
+		queryFn: async () => await getUser({ userId: data?.user.id! }),
 		enabled: !!data?.user.id,
 	});
+
+	const userData = user ? user[0] : null;
+	console.log("userData", userData);
 
 	const {
 		register,
@@ -50,34 +53,43 @@ export function Account() {
 
 	useEffect(() => {
 		reset({
-			name: user?.name,
-			email: user?.email,
-			phone: user?.phoneNumber ?? undefined,
+			name: userData?.name,
+			email: userData?.email,
+			phone: userData?.phoneNumber ?? undefined,
 		});
-	}, [user]);
+	}, [userData]);
 
 	const userId = data?.user.id;
 	if (!userId) return null;
 
 	const onSubmit = async (data: schemaInformationsType) => {
-		const updatePromise = updateUserComunication({
-			name: data.name,
-			email: data.email,
-			phoneNumber: data.phone,
-		});
-		if (!user?.phoneNumberVerified && data.phone) {
+		if (!userData?.phoneNumberVerified && data.phone) {
 			await phoneNumber.sendOtp({ phoneNumber: data.phone });
 			setPhoneNumberUser(data.phone);
 			setOpen(true);
 		}
-		toast
-			.promise(updatePromise, {
-				loading: "Atualizando...",
-				success: "Informações atualizadas com sucesso!",
-				error: "Erro ao atualizar informações!",
-			})
-			.unwrap()
-			.then(() => queryClient.invalidateQueries(["getUser"]));
+		try {
+			toast.promise(
+				async () => {
+					const [result, error] = await updateUserComunication(data);
+					if (error) {
+						throw new Error(
+							error.message || "Failed to update user information",
+						);
+					}
+					return result;
+				},
+				{
+					loading: "Atualizando...",
+					success: "Informações atualizadas com sucesso!",
+					error: "Erro ao atualizar informações!",
+				},
+			);
+
+			queryClient.invalidateQueries(["getUser"]);
+		} catch (error) {
+			console.error("Erro ao atualizar informações:", error);
+		}
 	};
 
 	const handleCloseModal = () => {
@@ -95,7 +107,7 @@ export function Account() {
 			viewport={{ once: true, margin: "-64px" }}
 			className="container mt-10"
 		>
-			{!user?.phoneNumberVerified && <AlertPhoneNotVerified />}
+			{!userData?.phoneNumberVerified && <AlertPhoneNotVerified />}
 			<p className="text-4xl font-bold">Sua conta</p>
 			<div className="p-4 rounded-xl bg-muted mt-6 flex items-center justify-between">
 				<div className="flex flex-col gap-2">
@@ -104,13 +116,13 @@ export function Account() {
 					) : (
 						<>
 							<p className="font-bold text-xl">
-								Nome: <span className="font-normal">{user?.name}</span>
+								Nome: <span className="font-normal">{userData?.name}</span>
 							</p>
-							{user?.image ? (
+							{userData?.image ? (
 								<div className="relative size-48 group">
 									<Image
-										src={user.image}
-										alt={user.name}
+										src={userData.image}
+										alt={userData.name}
 										width={1920}
 										height={1080}
 										className="size-48 rounded-full z-10 absolute"
@@ -120,7 +132,7 @@ export function Account() {
 							) : (
 								<div className="size-48 rounded-full bg-foreground relative group opacity-60">
 									<p className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-5xl text-muted-foreground">
-										{user?.name[0].toUpperCase()}
+										{userData?.name?.[0]?.toUpperCase()}
 									</p>
 									<EditButton userId={userId} />
 								</div>
@@ -147,7 +159,7 @@ export function Account() {
 							</span>
 						)}
 					</div>
-					{!user?.phoneNumberVerified && (
+					{!userData?.phoneNumberVerified && (
 						<div className="flex gap-4 items-center justify-end">
 							<Label>Telefone</Label>
 							<Input
@@ -167,7 +179,7 @@ export function Account() {
 					<Button className="w-fit self-end">Atualizar</Button>
 				</form>
 				<ModalConfirmPhoneOtp
-					email={user?.email ?? ""}
+					email={userData?.email ?? ""}
 					open={open}
 					onClose={handleCloseModal}
 					phoneNumberUser={phoneNumberUser}
