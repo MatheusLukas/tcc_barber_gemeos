@@ -10,6 +10,7 @@ type Props = {
 	duration?: number;
 	delay?: number;
 	className?: string;
+	from?: number;
 };
 
 export function Animation({
@@ -20,13 +21,14 @@ export function Animation({
 	margin = "-32px",
 	once = false,
 	className,
+	from = 50,
 	...props
 }: Props) {
 	const directionMap = {
-		up: { start: { y: -50 }, end: { y: 0 } },
-		down: { start: { y: 50 }, end: { y: 0 } },
-		left: { start: { x: -50 }, end: { x: 0 } },
-		right: { start: { x: 50 }, end: { x: 0 } },
+		up: { start: { y: -from }, end: { y: 0 } },
+		down: { start: { y: from }, end: { y: 0 } },
+		left: { start: { x: -from }, end: { x: 0 } },
+		right: { start: { x: from }, end: { x: 0 } },
 	};
 
 	return (

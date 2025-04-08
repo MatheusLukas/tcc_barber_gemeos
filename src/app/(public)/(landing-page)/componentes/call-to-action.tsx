@@ -1,7 +1,7 @@
+import { Animation } from "@/src/components/animation";
+import { Button } from "@/src/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
-import { Animation } from "./animation";
-import { Button } from "./ui/button";
 
 export function CallToAction() {
 	return (

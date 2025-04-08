@@ -89,7 +89,6 @@ const fieldGroupStyles = tv({
 		"*:data-[slot=prefix]:ml-2.5 *:data-[slot=prefix]:text-muted-fg",
 	],
 	variants: {
-		isFocusWithin: focusStyles.variants.isFocused,
 		isInvalid: focusStyles.variants.isInvalid,
 		isDisabled: {
 			true: "opacity-50 forced-colors:border-[GrayText]",

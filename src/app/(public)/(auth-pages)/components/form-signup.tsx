@@ -6,6 +6,7 @@ import { signUp } from "@/src/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
+import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -22,6 +23,8 @@ const schemaLogin = z.object({
 type schemaLoginType = z.infer<typeof schemaLogin>;
 
 export function FormSignUp() {
+	const formId = useId();
+	const [isLoading, setIsLoading] = useState(false);
 	const {
 		register,
 		handleSubmit,
@@ -37,6 +40,7 @@ export function FormSignUp() {
 		}
 
 		const signUpPromise = new Promise((resolve, reject) => {
+			setIsLoading(true);
 			try {
 				signUp
 					.email(
@@ -64,6 +68,7 @@ export function FormSignUp() {
 			} catch (error) {
 				reject(error);
 			}
+			setIsLoading(true);
 		});
 
 		toast.promise(signUpPromise, {
@@ -96,6 +101,7 @@ export function FormSignUp() {
 			</div>
 
 			<form
+				id={formId}
 				className="w-full flex flex-col gap-4 max-w-sm"
 				onSubmit={handleSubmit(onSubmit)}
 			>
@@ -157,7 +163,12 @@ export function FormSignUp() {
 						)}
 					</div>
 				</div>
-				<Button className="py-5" type="submit">
+				<Button
+					disabled={isLoading}
+					form={formId}
+					className="py-5"
+					type="submit"
+				>
 					Sign Up
 				</Button>
 				<div className="flex items-center justify-center gap-1">

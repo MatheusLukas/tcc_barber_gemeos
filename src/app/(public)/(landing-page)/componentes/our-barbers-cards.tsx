@@ -1,5 +1,5 @@
+import { Animation } from "@/src/components/animation";
 import Image from "next/image";
-import { Animation } from "./animation";
 
 export function OurBarbersCard({
 	photo,

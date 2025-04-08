@@ -1,8 +1,8 @@
+import { Animation } from "@/src/components/animation";
+import { CardBody, CardContainer, CardItem } from "@/src/components/ui/3d-card";
+import BlurFade from "@/src/components/ui/blur-fade";
 import Image from "next/image";
-import { Animation } from "./animation";
 import { CardAbout } from "./card-about";
-import { CardBody, CardContainer, CardItem } from "./ui/3d-card";
-import BlurFade from "./ui/blur-fade";
 
 const itemsAbout = [
 	{

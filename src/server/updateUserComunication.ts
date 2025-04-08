@@ -2,22 +2,24 @@
 import { db } from "@/src/db";
 import { user } from "@/src/db/schema";
 import { eq } from "drizzle-orm";
+import { z } from "zod";
+import { createServerAction } from "zsa";
 
-type Props = {
-	name: string;
-	email: string;
-	phoneNumber?: string;
-};
-
-export async function updateUserComunication({
-	name,
-	email,
-	phoneNumber,
-}: Props) {
-	await db
-		.update(user)
-		.set({ name, email, phoneNumber })
-		.where(eq(user.email, email));
-
-	return { success: true };
-}
+export const updateUserComunication = createServerAction()
+	.input(
+		z.object({
+			name: z.string(),
+			email: z.string(),
+			phoneNumber: z.string().optional(),
+		}),
+	)
+	.handler(async ({ input }) => {
+		await db
+			.update(user)
+			.set({
+				name: input.name,
+				email: input.email,
+				phoneNumber: input.phoneNumber,
+			})
+			.where(eq(user.email, input.email));
+	});

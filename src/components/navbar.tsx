@@ -185,6 +185,6 @@ function ButtonLogin() {
 			</Link>
 		</Button>
 	) : (
-		<DropdownUserMenu />
+		<DropdownUserMenu isAdmin />
 	);
 }

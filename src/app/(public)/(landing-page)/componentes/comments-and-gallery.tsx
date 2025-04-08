@@ -1,7 +1,6 @@
-import { Animation } from "./animation";
+import { Animation } from "@/src/components/animation";
 import { Comments } from "./comments";
 import { Gallery } from "./gallery";
-
 export function CommentsAndGallery() {
 	return (
 		<Animation

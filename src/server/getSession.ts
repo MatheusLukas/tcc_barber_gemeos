@@ -1,6 +1,6 @@
 import { getSession } from "@/src/lib/auth-client";
+import { createServerAction } from "zsa";
 
-export async function getSessionServer() {
-	const session = await getSession();
-	return session;
-}
+export const getSessionServer = createServerAction().handler(async () => {
+	return await getSession();
+});

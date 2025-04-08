@@ -1,5 +1,5 @@
+import { Animation } from "@/src/components/animation";
 import { Instagram } from "lucide-react";
-import { Animation } from "./animation";
 import { OurBarbersCard } from "./our-barbers-cards";
 
 const cardBarbers = [

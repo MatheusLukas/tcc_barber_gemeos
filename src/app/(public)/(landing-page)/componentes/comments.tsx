@@ -1,6 +1,6 @@
+import Marquee from "@/src/components/ui/marquee";
 import Image from "next/image";
 import { RatingStar } from "./rating-stars";
-import Marquee from "./ui/marquee";
 
 const comments = [
 	{

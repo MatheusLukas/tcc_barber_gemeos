@@ -58,12 +58,6 @@ const boxStyles = tv({
 				"group-data-invalid:border-danger/70 group-data-invalid:bg-danger group-data-invalid:text-danger-fg",
 			],
 		},
-		isFocused: {
-			true: [
-				"border-primary ring-4 ring-primary/20",
-				"group-data-invalid:border-danger/70 group-data-invalid:text-danger-fg group-data-invalid:ring-danger/20",
-			],
-		},
 		isInvalid: {
 			true: "border-danger/70 bg-danger/20 text-danger-fg ring-danger/20",
 		},

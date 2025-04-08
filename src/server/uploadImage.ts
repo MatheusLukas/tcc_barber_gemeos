@@ -2,24 +2,21 @@
 import { db } from "@/src/db";
 import { user } from "@/src/db/schema";
 import { eq } from "drizzle-orm";
+import { z } from "zod";
+import { createServerAction } from "zsa";
 
-type Props = {
-	url: string;
-	id: string;
-};
-
-export async function uploadImage({ url, id }: Props) {
-	console.log("uploadImage", url, id);
-	try {
+export const uploadImage = createServerAction()
+	.input(
+		z.object({
+			url: z.string(),
+			id: z.string(),
+		}),
+	)
+	.handler(async ({ input }) => {
 		await db
 			.update(user)
 			.set({
-				image: url,
+				image: input.url,
 			})
-			.where(eq(user.id, id));
-		return { success: true };
-	} catch (error) {
-		console.error("Error updating image:", error);
-		return { success: false, error: "Failed to update image" };
-	}
-}
+			.where(eq(user.id, input.id));
+	});
