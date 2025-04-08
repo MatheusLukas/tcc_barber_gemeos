@@ -1,4 +1,4 @@
-import { phoneNumberClient } from "better-auth/client/plugins";
+import { adminClient, phoneNumberClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 
 export const {
@@ -13,5 +13,5 @@ export const {
 	phoneNumber,
 } = createAuthClient({
 	baseURL: process.env.BETTER_AUTH_URL,
-	plugins: [phoneNumberClient()],
+	plugins: [phoneNumberClient(), adminClient()],
 });

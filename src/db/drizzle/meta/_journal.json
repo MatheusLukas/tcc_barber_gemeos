@@ -1,41 +1,48 @@
 {
-	"version": "7",
-	"dialect": "postgresql",
-	"entries": [
-		{
-			"idx": 0,
-			"version": "7",
-			"when": 1740001258889,
-			"tag": "0000_greedy_meteorite",
-			"breakpoints": true
-		},
-		{
-			"idx": 1,
-			"version": "7",
-			"when": 1742156513529,
-			"tag": "0001_sparkling_tusk",
-			"breakpoints": true
-		},
-		{
-			"idx": 2,
-			"version": "7",
-			"when": 1742158674673,
-			"tag": "0002_nice_pixie",
-			"breakpoints": true
-		},
-		{
-			"idx": 3,
-			"version": "7",
-			"when": 1742159788439,
-			"tag": "0003_grey_drax",
-			"breakpoints": true
-		},
-		{
-			"idx": 4,
-			"version": "7",
-			"when": 1742160033412,
-			"tag": "0004_tranquil_shiver_man",
-			"breakpoints": true
-		}
-	]
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1740001258889,
+      "tag": "0000_greedy_meteorite",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1742156513529,
+      "tag": "0001_sparkling_tusk",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1742158674673,
+      "tag": "0002_nice_pixie",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1742159788439,
+      "tag": "0003_grey_drax",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1742160033412,
+      "tag": "0004_tranquil_shiver_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1744078237918,
+      "tag": "0005_simple_plazm",
+      "breakpoints": true
+    }
+  ]
 }

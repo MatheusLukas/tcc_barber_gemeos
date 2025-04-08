@@ -1,4 +1,4 @@
-import { db } from "@/src/db"; // your drizzle instance
+import { db } from "@/src/db";
 import { account, session, user, verification } from "@/src/db/schema";
 import { sendEmailConfirm } from "@/src/server/sendEmail";
 import { sendEmailConfirmation } from "@/src/templates/confirm-email";
@@ -6,7 +6,7 @@ import { sendPhoneConfirmation } from "@/src/templates/confirm-phone";
 import { ResetPassword } from "@/src/templates/reset-password";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { phoneNumber } from "better-auth/plugins";
+import { admin, phoneNumber } from "better-auth/plugins";
 
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
@@ -25,10 +25,6 @@ export const auth = betterAuth({
 			},
 			phoneNumberVerified: {
 				type: "boolean",
-			},
-			role: {
-				type: "string",
-				defaultValue: "user",
 			},
 		},
 	},
@@ -64,14 +60,16 @@ export const auth = betterAuth({
 	},
 	plugins: [
 		phoneNumber({
-			sendOTP: async ({ phoneNumber, code }, request) => {
-				console.log(request, "teste aqui");
+			sendOTP: async ({ phoneNumber, code }) => {
 				await sendEmailConfirm({
 					email: "matheuslukas636@gmail.com",
 					subject: "Verifique seu email",
 					TemplateEmailHTML: sendPhoneConfirmation({ phoneNumber, code }),
 				});
 			},
+		}),
+		admin({
+			defaultRole: "user",
 		}),
 	],
 });

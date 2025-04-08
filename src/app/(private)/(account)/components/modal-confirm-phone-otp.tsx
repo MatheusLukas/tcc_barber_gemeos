@@ -22,8 +22,8 @@ import {
 	InputOTPSeparator,
 	InputOTPSlot,
 } from "@/src/components/ui/input-otp";
-import { phoneNumber } from "@/src/lib/auth-client";
 import { queryClient } from "@/src/lib/query-client";
+import { verifyPhone } from "@/src/server/verifyPhone";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useId } from "react";
 import { useForm } from "react-hook-form";
@@ -35,6 +35,7 @@ type Props = {
 	onClose: () => void;
 	email: string;
 	phoneNumberUser: string;
+	userId: string;
 };
 
 const schemaInputOtp = z.object({
@@ -50,6 +51,7 @@ export function ModalConfirmPhoneOtp({
 	onClose,
 	email,
 	phoneNumberUser,
+	userId,
 }: Props) {
 	const form = useForm<schemaInputOtpType>({
 		resolver: zodResolver(schemaInputOtp),
@@ -58,18 +60,23 @@ export function ModalConfirmPhoneOtp({
 	const formId = useId();
 
 	const onSubmit = async (data: schemaInputOtpType) => {
-		console.log(data, "data");
-		const isVerified = await phoneNumber.verify({
+		const teste = await verifyPhone({
 			phoneNumber: phoneNumberUser,
 			code: data.pin,
+			userId: userId,
 		});
-		console.log(isVerified, "isVerified");
-		if (isVerified.data) {
+
+		if (teste[0]?.data) {
 			queryClient.invalidateQueries(["getUser"]);
 			toast.success("Telefone verificado com sucesso!");
 			onClose();
 		} else {
-			toast.error("Código inválido!");
+			if (teste[0]?.hasExpired) {
+				toast.error("Código expirado!");
+				onClose();
+			} else {
+				toast.error("Código inválido!");
+			}
 		}
 	};
 
