@@ -8,5 +8,9 @@ import { createServerAction } from "zsa";
 export const userExist = createServerAction()
 	.input(z.object({ email: z.string() }))
 	.handler(async ({ input }) => {
-		return await db.select().from(user).where(eq(user.email, input.email));
+		return await db
+			.select()
+			.from(user)
+			.where(eq(user.email, input.email))
+			.then((user) => user.at(0) ?? null);
 	});

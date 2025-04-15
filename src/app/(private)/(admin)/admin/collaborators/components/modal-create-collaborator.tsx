@@ -6,6 +6,7 @@ import {
 import { Button } from "@/src/components/ui/button";
 import {
 	Dialog,
+	DialogClose,
 	DialogContent,
 	DialogDescription,
 	DialogFooter,
@@ -15,22 +16,81 @@ import {
 } from "@/src/components/ui/dialog";
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue,
-} from "@/src/components/ui/select";
-import { Plus } from "lucide-react";
+import { ROLES } from "@/src/enum/roles";
+import { cn } from "@/src/lib/utils";
+import { createCollaborator } from "@/src/server/admin/createCollaborator";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { Plus, X } from "lucide-react";
+import Image from "next/image";
+import { useId, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+import { AddImage } from "./add-image";
+import { SelectRole } from "./select-role";
+
+const schemaCollaborator = z.object({
+	name: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
+	email: z.string().email("Email inválido"),
+	role: z.nativeEnum(ROLES),
+	avatar: z.instanceof(File),
+	password: z.string().min(8, "Senha deve ter pelo menos 8 caracteres"),
+});
+
+export type schemaCollaboratorType = z.infer<typeof schemaCollaborator>;
 
 export function ModalCreateCollaborator() {
+	const [isOpen, setIsOpen] = useState(false);
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+		control,
+		reset,
+		watch,
+	} = useForm<schemaCollaboratorType>({
+		resolver: zodResolver(schemaCollaborator),
+	});
+
+	const { mutateAsync, isLoading } = useMutation({
+		mutationKey: ["uploadImage"],
+		mutationFn: async (data: schemaCollaboratorType) => {
+			const [response, err] = await createCollaborator({
+				name: data.name,
+				email: data.email,
+				role: data.role,
+				file: data.avatar,
+				password: data.password,
+			});
+
+			console.log(response, "response");
+			console.log(err, "err");
+
+			if (err) {
+				toast.error(err.data);
+			} else {
+				toast.success("Colaborador criado com sucesso");
+				reset();
+				setIsOpen(false);
+			}
+		},
+	});
+
+	const formId = useId();
+
+	const avatar = watch("avatar");
+
+	const onSubmit = (data: schemaCollaboratorType) => {
+		toast.promise(mutateAsync(data), {
+			loading: "Criando colaborador...",
+		});
+	};
+
 	return (
-		<Dialog>
+		<Dialog open={isOpen}>
 			<DialogTrigger asChild>
-				<Button>
+				<Button onClick={() => setIsOpen(true)}>
 					<Plus />
 					Criar perfil
 				</Button>
@@ -42,40 +102,103 @@ export function ModalCreateCollaborator() {
 						Preencha os campos abaixo para criar um novo colaborador.
 					</DialogDescription>
 				</DialogHeader>
-				<form className="mt-6 space-y-2">
-					<div className="flex flex-col items-center justify-center gap-2">
-						<Avatar className="size-20">
-							<AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-							<AvatarFallback>CN</AvatarFallback>
-						</Avatar>
-						<Button variant="ghost">Enviar Imagem</Button>
+				<DialogClose
+					onClick={() => setIsOpen(false)}
+					className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+				>
+					<X className="h-4 w-4" />
+					<span className="sr-only">Close</span>
+				</DialogClose>
+				<form
+					id={formId}
+					onSubmit={handleSubmit(onSubmit)}
+					className="mt-6 space-y-2"
+				>
+					<div className="flex flex-col items-center justify-center gap-2 relative group">
+						{avatar ? (
+							<Image
+								src={URL.createObjectURL(avatar)}
+								alt="Logo"
+								width={100}
+								height={100}
+								className="size-20 object-cover rounded-full"
+							/>
+						) : (
+							<Avatar className="size-20">
+								<AvatarImage
+									src="https://github.com/shadcn.png"
+									alt="@shadcn"
+								/>
+								<AvatarFallback>CN</AvatarFallback>
+							</Avatar>
+						)}
+						<Controller
+							control={control}
+							render={({ field }) => (
+								<AddImage className="size-20" field={field} />
+							)}
+							name="avatar"
+						/>
 					</div>
 					<div className="space-y-2">
 						<Label>Nome</Label>
-						<Input />
+						<Input
+							className={cn(errors.name && "border-destructive")}
+							{...register("name")}
+						/>
+						{errors.name && (
+							<span className="text-destructive text-sm">
+								{errors.name.message}
+							</span>
+						)}
 					</div>
 					<div className="space-y-2">
 						<Label>Email</Label>
-						<Input />
+						<Input
+							className={cn(errors.email && "border-destructive")}
+							{...register("email")}
+						/>
+						{errors.email && (
+							<span className="text-destructive text-sm">
+								{errors.email.message}
+							</span>
+						)}
 					</div>
 					<div className="space-y-2">
-						<Label>Cargo</Label>
-						<Select>
-							<SelectTrigger>
-								<SelectValue placeholder="Select a fruit" />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectGroup>
-									<SelectLabel>Cargo</SelectLabel>
-									<SelectItem value="admin">Admin</SelectItem>
-									<SelectItem value="collaborator">Colaborador</SelectItem>
-								</SelectGroup>
-							</SelectContent>
-						</Select>
+						<Label>Senha</Label>
+						<Input
+							className={cn(errors.password && "border-destructive")}
+							{...register("password")}
+						/>
+						{errors.password && (
+							<span className="text-destructive text-sm">
+								{errors.password.message}
+							</span>
+						)}
 					</div>
+					<div className="space-y-2">
+						<Label className={cn(errors.role && "border-destructive")}>
+							Cargo
+						</Label>
+						<Controller
+							control={control}
+							render={({ field }) => <SelectRole field={field} />}
+							name="role"
+						/>
+						{errors.role && (
+							<span className="text-destructive text-sm">
+								{errors.role.message}
+							</span>
+						)}
+					</div>
+					{errors.avatar && (
+						<span className="text-destructive text-sm">Envie uma imagem</span>
+					)}
 				</form>
 				<DialogFooter>
-					<Button type="submit">Criar</Button>
+					<Button disabled={isLoading} form={formId} type="submit">
+						Criar
+					</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

@@ -1,13 +1,6 @@
 "use client";
 import { Animation } from "@/src/components/animation";
 import { Input } from "@/src/components/ui/input";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/src/components/ui/select";
 import { Search } from "lucide-react";
 import { useState } from "react";
 import { FilterCollaborator } from "./components/filter-collaborator";
@@ -33,16 +26,6 @@ export default function Collaborators() {
 					direction="right"
 				>
 					<ModalCreateCollaborator />
-					<Select>
-						<SelectTrigger className="w-[180px]">
-							<SelectValue placeholder="Filtrar por..." />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="today">Hoje</SelectItem>
-							<SelectItem value="week">Semana</SelectItem>
-							<SelectItem value="month">Mês</SelectItem>
-						</SelectContent>
-					</Select>
 				</Animation>
 			</div>
 			<div className="grid grid-cols-5 gap-20">

@@ -36,6 +36,7 @@ export const verifyPhone = createServerAction()
 				.update(user)
 				.set({
 					phoneNumberVerified: true,
+					phoneNumber: input.phoneNumber,
 				})
 				.where(eq(user.id, input.userId));
 			response.data = true;
