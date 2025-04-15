@@ -37,16 +37,16 @@ export function DropdownUserMenu({ isAdmin }: Props) {
 					<CircleUserRound size={20} />
 					<span>Conta</span>
 				</DropdownMenuItem>
-				<DropdownMenuItem onClick={handleLogout}>
-					<LogOut size={20} />
-					<span>Logout</span>
-				</DropdownMenuItem>
 				{isAdmin && (
 					<DropdownMenuItem onClick={() => router.push("/admin")}>
 						<LockKeyhole size={20} />
 						<span>Admin</span>
 					</DropdownMenuItem>
 				)}
+				<DropdownMenuItem onClick={handleLogout}>
+					<LogOut size={20} />
+					<span>Logout</span>
+				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

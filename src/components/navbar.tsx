@@ -13,6 +13,7 @@ import { ArrowUpRight, Menu, User2, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ROLES } from "../enum/roles";
 import { Animation } from "./animation";
 import { DropdownUserMenu } from "./dropdown-user-menu";
 import { ModeToggle } from "./mode-toggle";
@@ -174,6 +175,7 @@ function NavbarMobile({ session }: Props) {
 
 function ButtonLogin() {
 	const { data: session } = useSession();
+	const isAdmin = session?.user?.role === ROLES.ADMIN;
 	return !session ? (
 		<Button
 			variant="secondary"
@@ -185,6 +187,6 @@ function ButtonLogin() {
 			</Link>
 		</Button>
 	) : (
-		<DropdownUserMenu isAdmin />
+		<DropdownUserMenu isAdmin={isAdmin} />
 	);
 }

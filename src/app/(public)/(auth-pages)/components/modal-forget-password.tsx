@@ -38,11 +38,13 @@ export function DialogForgetPassword() {
 		event.stopPropagation();
 
 		return handleSubmit(async (data) => {
-			const userExisting = await userExist(data.email);
+			const [userExisting, barberExisting] = await userExist({
+				email: data.email,
+			});
 
 			console.log(userExisting, "userExisting");
 
-			if (userExisting.length === 0)
+			if (!userExisting && barberExisting)
 				return toast.error("Usuário não encontrado");
 
 			console.log(data.email, "hi");

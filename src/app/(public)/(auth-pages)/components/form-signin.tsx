@@ -38,9 +38,11 @@ export function FormSignIn() {
 
 	const onSubmit = async (data: schemaLoginType) => {
 		setIsLoading(true);
-		const userExisting = await userExist({ email: data.email });
+		const [userExisting, barberExisting] = await userExist({
+			email: data.email,
+		});
 
-		if (!userExisting) {
+		if (!userExisting && !barberExisting) {
 			toast.error("Usuário não encontrado");
 			return;
 		}
