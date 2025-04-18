@@ -9,6 +9,7 @@ import {
 import type { VariantProps } from "tailwind-variants";
 import { tv } from "tailwind-variants";
 
+import { FormatPrice } from "@/src/lib/format-price";
 import { Checkbox } from "./checkbox-react-aria";
 import { Description, Label } from "./filed-react-aria";
 import { focusStyles } from "./primitive";
@@ -101,7 +102,7 @@ interface ChoiceboxItemProps
 	extends GridListItemProps,
 		VariantProps<typeof choiceboxItemStyles> {
 	title?: string;
-	description?: string;
+	description?: string | number;
 	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }
 
@@ -128,7 +129,7 @@ const ChoiceboxItem = ({
 				<div className="flex w-full items-center justify-between gap-2">
 					<div className="flex gap-x-2.5">
 						{Icon && (
-							<Icon className="dark:text-white" data-slot="choicebox-icon" />
+							<Icon className="dark:!text-white" data-slot="choicebox-icon" />
 						)}
 						<div className="flex flex-col gap-y-1 pr-8">
 							<Label slot="title" className="text-sm/4" htmlFor={textValue}>
@@ -136,7 +137,9 @@ const ChoiceboxItem = ({
 							</Label>
 							{props.description && (
 								<Description className="text-sm/5">
-									{props.description}
+									{typeof props.description === "string"
+										? props.description
+										: FormatPrice(props.description)}
 								</Description>
 							)}
 						</div>

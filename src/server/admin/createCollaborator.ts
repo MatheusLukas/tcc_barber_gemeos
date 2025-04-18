@@ -43,7 +43,7 @@ export const createCollaborator = createServerAction()
 		await db.insert(barbers).values({
 			name: data.user.name,
 			email: data.user.email,
-			image: data.user.image,
+			image: data.user.image!,
 			role: input.role,
 		});
 

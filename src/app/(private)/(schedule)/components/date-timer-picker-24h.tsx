@@ -13,8 +13,15 @@ import {
 } from "@/src/components/ui/popover";
 import { ScrollArea, ScrollBar } from "@/src/components/ui/scroll-area";
 import { cn } from "@/src/lib/utils";
+import type { ControllerRenderProps } from "react-hook-form";
+import type { schemaScheduleType } from "./schedule-component";
 
-export function DateTimePicker24h() {
+type Props = {
+	disabled?: boolean;
+	field: ControllerRenderProps<schemaScheduleType, "date">;
+};
+
+export function DateTimePicker24h({ disabled, field }: Props) {
 	const [date, setDate] = React.useState<Date>();
 	const [isOpen, setIsOpen] = React.useState(false);
 
@@ -36,6 +43,7 @@ export function DateTimePicker24h() {
 				newDate.setMinutes(Number.parseInt(value));
 			}
 			setDate(newDate);
+			field.onChange(newDate);
 		}
 	};
 
@@ -48,10 +56,11 @@ export function DateTimePicker24h() {
 						"max-w-md justify-start text-left font-normal",
 						!date && "text-muted-foreground",
 					)}
+					disabled={disabled}
 				>
 					<Calendar1Icon className="mr-2 h-4 w-4" />
 					{date ? (
-						format(date, "MM/dd/yyyy hh:mm")
+						format(date, "MM/dd/yyyy HH:mm")
 					) : (
 						<span>Dia/Mês/Ano | Hora:minuto </span>
 					)}
@@ -62,11 +71,13 @@ export function DateTimePicker24h() {
 					<Calendar
 						mode="single"
 						selected={date}
-						onSelect={handleDateSelect}
+						onSelect={(selectedDate) => {
+							handleDateSelect(selectedDate);
+						}}
 						initialFocus
 						footer={
 							date
-								? `Dia: ${format(date, "MM/dd/yyyy hh:mm")}`
+								? `Dia: ${format(date, "MM/dd/yyyy HH:mm")}`
 								: "Selecione um dia"
 						}
 						disabled={{ before: today }}

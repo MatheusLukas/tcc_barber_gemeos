@@ -1,0 +1,1 @@
+ALTER TABLE "barbers" ALTER COLUMN "image" SET NOT NULL;

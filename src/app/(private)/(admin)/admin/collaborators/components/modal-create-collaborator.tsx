@@ -54,7 +54,7 @@ export function ModalCreateCollaborator() {
 	});
 
 	const { mutateAsync, isLoading } = useMutation({
-		mutationKey: ["uploadImage"],
+		mutationKey: ["create-collaborator"],
 		mutationFn: async (data: schemaCollaboratorType) => {
 			const [response, err] = await createCollaborator({
 				name: data.name,
