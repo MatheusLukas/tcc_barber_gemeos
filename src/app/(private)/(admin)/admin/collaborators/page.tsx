@@ -1,11 +1,14 @@
 "use client";
 import { Animation } from "@/src/components/animation";
 import { Input } from "@/src/components/ui/input";
+import { ScrollArea } from "@/src/components/ui/scroll-area";
 import { Search } from "lucide-react";
 import { useState } from "react";
 import { FilterCollaborator } from "./components/filter-collaborator";
 import { ModalCreateCollaborator } from "./components/modal-create-collaborator";
+import { ModalCreateJob } from "./components/modal-create-job";
 import { ShowCollaborators } from "./components/show-collaborators";
+import { ShowJobs } from "./components/show-jobs";
 import { TableCollaborators } from "./components/table-collaborators";
 
 export default function Collaborators() {
@@ -31,6 +34,24 @@ export default function Collaborators() {
 			<div className="grid grid-cols-5 gap-20">
 				<ShowCollaborators />
 			</div>
+			<div className="flex justify-between items-center">
+				<Animation delay={0.2} once direction="left">
+					<p className="text-3xl font-bold text-center sm:text-start">
+						Serviços
+					</p>
+				</Animation>
+				<Animation
+					className="flex items-center gap-4"
+					delay={0.2}
+					once
+					direction="right"
+				>
+					<ModalCreateJob />
+				</Animation>
+			</div>
+			<ScrollArea className="grid gap-4 w-full h-[350px]">
+				<ShowJobs />
+			</ScrollArea>
 			<div className="space-y-4">
 				<div className="flex justify-end gap-4">
 					<Animation

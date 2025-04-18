@@ -59,6 +59,7 @@ export function ShowCollaborators() {
 					delay={0.3 + idx * 0.1}
 					direction="down"
 					key={collaborator.name}
+					once
 				>
 					<CardContainer className="bg-muted w-full p-6 rounded-md">
 						<CardBody className="w-full h-64 grid grid-rows-[5fr_5fr_2fr]">

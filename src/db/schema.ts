@@ -78,7 +78,7 @@ export const barbers = pgTable("barbers", {
 	id: uuid("id").defaultRandom().primaryKey(),
 	name: text("name").notNull(),
 	email: text("email").notNull(),
-	image: text("image"),
+	image: text("image").notNull(),
 	role: roleEnum("role").notNull(),
 });
 
@@ -91,13 +91,30 @@ export const schedule = pgTable("schedule", {
 		.notNull()
 		.references(() => barbers.id),
 	date: timestamp("date").notNull(),
-	type: text("type").notNull(),
 	price: doublePrecision("price").notNull(),
+	paymentMethod: text("payment_method").notNull(),
+});
+
+export const scheduleHasJobs = pgTable("scheduleHasJobs", {
+	id: uuid("id").defaultRandom().primaryKey(),
+	scheduleId: uuid("schedule_id")
+		.notNull()
+		.references(() => schedule.id),
 	jobId: uuid("job_id")
 		.notNull()
 		.references(() => jobs.id),
-	paymentMethod: text("payment_method").notNull(),
 });
+
+export const scheduleJobsRelations = relations(scheduleHasJobs, ({ one }) => ({
+	schedule: one(schedule, {
+		fields: [scheduleHasJobs.scheduleId],
+		references: [schedule.id],
+	}),
+	job: one(jobs, {
+		fields: [scheduleHasJobs.jobId],
+		references: [jobs.id],
+	}),
+}));
 
 export const scheduleRelations = relations(schedule, ({ one }) => ({
 	user: one(user, {
@@ -107,10 +124,6 @@ export const scheduleRelations = relations(schedule, ({ one }) => ({
 	barber: one(barbers, {
 		fields: [schedule.barberId],
 		references: [barbers.id],
-	}),
-	job: one(jobs, {
-		fields: [schedule.jobId],
-		references: [jobs.id],
 	}),
 }));
 

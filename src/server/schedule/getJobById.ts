@@ -1,0 +1,16 @@
+"use server";
+import { db } from "@/src/db";
+import { jobs } from "@/src/db/schema";
+import { inArray } from "drizzle-orm";
+import z from "zod";
+import { createServerAction } from "zsa";
+
+export const getJobById = createServerAction()
+	.input(
+		z.object({
+			jobsId: z.array(z.string()),
+		}),
+	)
+	.handler(async ({ input }) => {
+		return await db.select().from(jobs).where(inArray(jobs.id, input.jobsId));
+	});

@@ -76,6 +76,30 @@ const collaborators = [
 		earnings: 800,
 		appointments: 150,
 	},
+	{
+		image: "/barbeiro.jpg",
+		name: "Maionese",
+		earnings: 800,
+		appointments: 150,
+	},
+	{
+		image: "/barbeiro.jpg",
+		name: "Maionese1",
+		earnings: 800,
+		appointments: 150,
+	},
+	{
+		image: "/barbeiro.jpg",
+		name: "Maionese2",
+		earnings: 800,
+		appointments: 150,
+	},
+	{
+		image: "/barbeiro.jpg",
+		name: "Maionese3",
+		earnings: 800,
+		appointments: 150,
+	},
 ];
 
 export function ChartSchedule() {
