@@ -1,15 +1,18 @@
 import { Animation } from "@/src/components/animation";
-import { Button } from "@/src/components/ui/button";
 import { Skeleton } from "@/src/components/ui/skeleton";
 import { FormatPrice } from "@/src/lib/format-price";
 import { getAllJobs } from "@/src/server/getAllJobs";
 import { useQuery } from "@tanstack/react-query";
-import { Pen, Scissors, Trash } from "lucide-react";
+import { Scissors } from "lucide-react";
+import { EditJobs } from "./edit-jobs";
 
 export function ShowJobs() {
 	const { data: jobs, isLoading } = useQuery({
 		queryKey: ["jobs"],
-		queryFn: async () => getAllJobs(),
+		queryFn: async () => {
+			const [data, _] = await getAllJobs();
+			return data;
+		},
 	});
 
 	return (
@@ -23,8 +26,8 @@ export function ShowJobs() {
 						</div>
 						<div className="flex items-center gap-4">
 							<Skeleton className="size-6 h-7 w-32" />
-							<Skeleton className="size-6 h-9 w-12 rounded-md" />
-							<Skeleton className="size-6 h-9 w-12 rounded-md" />
+							<Skeleton className="h-9 w-12 rounded-md" />
+							<Skeleton className="h-9 w-12 rounded-md" />
 						</div>
 					</div>
 					<div className="flex justify-between bg-muted w-full h-16 p-4 rounded-md">
@@ -34,8 +37,8 @@ export function ShowJobs() {
 						</div>
 						<div className="flex items-center gap-4">
 							<Skeleton className="size-6 h-7 w-32" />
-							<Skeleton className="size-6 h-9 w-12 rounded-md" />
-							<Skeleton className="size-6 h-9 w-12 rounded-md" />
+							<Skeleton className="h-9 w-12 rounded-md" />
+							<Skeleton className="h-9 w-12 rounded-md" />
 						</div>
 					</div>
 					<div className="flex justify-between bg-muted w-full h-16 p-4 rounded-md">
@@ -45,8 +48,8 @@ export function ShowJobs() {
 						</div>
 						<div className="flex items-center gap-4">
 							<Skeleton className="size-6 h-7 w-32" />
-							<Skeleton className="size-6 h-9 w-12 rounded-md" />
-							<Skeleton className="size-6 h-9 w-12 rounded-md" />
+							<Skeleton className="h-9 w-12 rounded-md" />
+							<Skeleton className="h-9 w-12 rounded-md" />
 						</div>
 					</div>
 					<div className="flex justify-between bg-muted w-full h-16 p-4 rounded-md">
@@ -56,8 +59,8 @@ export function ShowJobs() {
 						</div>
 						<div className="flex items-center gap-4">
 							<Skeleton className="size-6 h-7 w-32" />
-							<Skeleton className="size-6 h-9 w-12 rounded-md" />
-							<Skeleton className="size-6 h-9 w-12 rounded-md" />
+							<Skeleton className="h-9 w-12 rounded-md" />
+							<Skeleton className="h-9 w-12 rounded-md" />
 						</div>
 					</div>
 					<div className="flex justify-between bg-muted w-full h-16 p-4 rounded-md">
@@ -67,13 +70,13 @@ export function ShowJobs() {
 						</div>
 						<div className="flex items-center gap-4">
 							<Skeleton className="size-6 h-7 w-32" />
-							<Skeleton className="size-6 h-9 w-12 rounded-md" />
-							<Skeleton className="size-6 h-9 w-12 rounded-md" />
+							<Skeleton className="h-9 w-12 rounded-md" />
+							<Skeleton className="h-9 w-12 rounded-md" />
 						</div>
 					</div>
 				</>
-			) : (
-				jobs?.[0]?.map((job) => (
+			) : jobs && jobs.length > 0 ? (
+				jobs.map((job) => (
 					<Animation direction="down" key={job.id} once>
 						<div className="flex justify-between bg-muted w-full p-4 rounded-md h-fit">
 							<div className="flex items-center gap-4">
@@ -84,16 +87,17 @@ export function ShowJobs() {
 								<p className="font-semibold text-lg text-center">
 									{FormatPrice(job.price)}
 								</p>
-								<Button variant="destructive">
-									<Trash />
-								</Button>
-								<Button>
-									<Pen />
-								</Button>
+								<EditJobs jobId={job.id} />
 							</div>
 						</div>
 					</Animation>
 				))
+			) : (
+				<div className="flex justify-center items-center w-full h-[350px]">
+					<p className="text-lg font-semibold text-muted-foreground">
+						Não há serviços cadastrados
+					</p>
+				</div>
 			)}
 		</div>
 	);

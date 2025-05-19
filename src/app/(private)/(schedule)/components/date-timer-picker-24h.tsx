@@ -13,21 +13,36 @@ import {
 } from "@/src/components/ui/popover";
 import { ScrollArea, ScrollBar } from "@/src/components/ui/scroll-area";
 import { cn } from "@/src/lib/utils";
+import { getFreeHoursByBarberd } from "@/src/server/getFreeHoursByBarberId";
+import { useQuery } from "@tanstack/react-query";
 import type { ControllerRenderProps } from "react-hook-form";
 import type { schemaScheduleType } from "./schedule-component";
 
 type Props = {
 	disabled?: boolean;
 	field: ControllerRenderProps<schemaScheduleType, "date">;
+	barberId?: string;
 };
 
-export function DateTimePicker24h({ disabled, field }: Props) {
+export function DateTimePicker24h({ disabled, field, barberId }: Props) {
 	const [date, setDate] = React.useState<Date>();
 	const [isOpen, setIsOpen] = React.useState(false);
 
+	const { data, isLoading } = useQuery({
+		queryKey: ["freeHours", barberId],
+		queryFn: async () => {
+			const [response, _] = await getFreeHoursByBarberd({
+				barberId: barberId!,
+			});
+			return response;
+		},
+		enabled: !!barberId,
+	});
+
 	const hours = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
-	const minutes = [0o0, 30];
+	const minutes = [0, 30];
 	const today = new Date();
+
 	const handleDateSelect = (selectedDate: Date | undefined) => {
 		if (selectedDate) {
 			setDate(selectedDate);
@@ -47,16 +62,47 @@ export function DateTimePicker24h({ disabled, field }: Props) {
 		}
 	};
 
+	const occupiedAppointments = data || [];
+	const occupiedHours = occupiedAppointments.map((appointment) => {
+		const appointmentDate = new Date(appointment.date);
+		return {
+			hour: appointmentDate.getHours(),
+			minute: appointmentDate.getMinutes(),
+			day: appointmentDate.getDate(),
+			month: appointmentDate.getMonth(),
+			year: appointmentDate.getFullYear(),
+		};
+	});
+
+	const isTimeOccupied = (hour: number, minute: number, selectedDate: Date) => {
+		if (!selectedDate) return false;
+		return occupiedHours.some(
+			(appointment) =>
+				appointment.hour === hour &&
+				appointment.minute === minute &&
+				appointment.day === selectedDate.getDate() &&
+				appointment.month === selectedDate.getMonth() &&
+				appointment.year === selectedDate.getFullYear(),
+		);
+	};
+
+	const isHourDisabled = (hour: number, selectedDate: Date) => {
+		return (
+			isTimeOccupied(hour, 0, selectedDate) &&
+			isTimeOccupied(hour, 30, selectedDate)
+		);
+	};
+
 	return (
 		<Popover open={isOpen} onOpenChange={setIsOpen}>
 			<PopoverTrigger asChild>
 				<Button
 					variant="outline"
 					className={cn(
-						"max-w-md justify-start text-left font-normal",
+						"w-full justify-start text-left font-normal",
 						!date && "text-muted-foreground",
 					)}
-					disabled={disabled}
+					disabled={disabled || isLoading}
 				>
 					<Calendar1Icon className="mr-2 h-4 w-4" />
 					{date ? (
@@ -71,9 +117,7 @@ export function DateTimePicker24h({ disabled, field }: Props) {
 					<Calendar
 						mode="single"
 						selected={date}
-						onSelect={(selectedDate) => {
-							handleDateSelect(selectedDate);
-						}}
+						onSelect={handleDateSelect}
 						initialFocus
 						footer={
 							date
@@ -97,6 +141,7 @@ export function DateTimePicker24h({ disabled, field }: Props) {
 										}
 										className="sm:w-full shrink-0 aspect-square"
 										onClick={() => handleTimeChange("hour", hour.toString())}
+										disabled={isHourDisabled(hour, date!)} // Desabilita se a hora estiver ocupada
 									>
 										{hour}h
 									</Button>
@@ -117,6 +162,7 @@ export function DateTimePicker24h({ disabled, field }: Props) {
 										onClick={() =>
 											handleTimeChange("minute", minute.toString())
 										}
+										disabled={isTimeOccupied(date?.getHours()!, minute, date!)}
 									>
 										{minute.toString().padStart(2, "0")}m
 									</Button>

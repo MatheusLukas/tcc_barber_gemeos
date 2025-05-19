@@ -12,6 +12,7 @@ import { userExist } from "../userExist";
 export const createCollaborator = createServerAction()
 	.input(
 		z.object({
+			id: z.string().optional(),
 			name: z.string(),
 			email: z.string(),
 			file: z.instanceof(File),
@@ -21,34 +22,55 @@ export const createCollaborator = createServerAction()
 	)
 	.handler(async ({ input }) => {
 		// Outra possivel maneira de fazer: https://www.better-auth.com/docs/plugins/admin
-		const [userExistResponse] = await userExist({ email: input.email });
-
-		if (userExistResponse) {
-			throw "Esse email já foi utilizado";
-		}
 
 		const [image] = await imageUploader({ file: input.file });
 
-		const { data } = await signUp.email({
-			name: input.name,
-			email: input.email,
-			password: input.password,
-			image: image?.data?.url,
-		});
+		if (input.id) {
+			await db
+				.update(user)
+				.set({
+					name: input.name,
+					image: image?.data?.url,
+					role: input.role,
+				})
+				.where(eq(user.id, input.id));
 
-		if (!data) {
-			throw "Erro ao criar o usuário";
+			await db
+				.update(barbers)
+				.set({
+					name: input.name,
+					image: image?.data?.url,
+					role: input.role,
+				})
+				.where(eq(barbers.id, input.id));
+		} else {
+			const [userExistResponse] = await userExist({ email: input.email });
+
+			if (userExistResponse) {
+				throw "Esse email já foi utilizado";
+			}
+
+			const { data } = await signUp.email({
+				name: input.name,
+				email: input.email,
+				password: input.password,
+				image: image?.data?.url,
+			});
+
+			if (!data) {
+				throw "Erro ao criar o usuário";
+			}
+
+			await db.insert(barbers).values({
+				name: data.user.name,
+				email: data.user.email,
+				image: data.user.image!,
+				role: input.role,
+			});
+
+			await db
+				.update(user)
+				.set({ role: input.role })
+				.where(eq(user.id, data.user.id));
 		}
-
-		await db.insert(barbers).values({
-			name: data.user.name,
-			email: data.user.email,
-			image: data.user.image!,
-			role: input.role,
-		});
-
-		await db
-			.update(user)
-			.set({ role: input.role })
-			.where(eq(user.id, data.user.id));
 	});

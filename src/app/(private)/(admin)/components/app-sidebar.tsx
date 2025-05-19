@@ -8,7 +8,7 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/src/components/ui/sidebar";
-import { Calendar, Home, Settings, Users } from "lucide-react";
+import { Calendar, Home, Package, Settings, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -27,6 +27,11 @@ const items = [
 		title: "Agenda",
 		url: "/admin/schedule",
 		icon: Calendar,
+	},
+	{
+		title: "Estoque",
+		url: "/admin/estoque",
+		icon: Package,
 	},
 	{
 		title: "Configurações",

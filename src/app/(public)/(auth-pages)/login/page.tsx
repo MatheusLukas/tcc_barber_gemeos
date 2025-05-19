@@ -4,7 +4,7 @@ import { Lens } from "../components/lens";
 
 export default function Home() {
 	return (
-		<div className="grid grid-cols-1 md:grid-cols-2 max-h-screen overflow-x-hidden">
+		<div className="grid grid-cols-1 md:grid-cols-2 overflow-x-hidden">
 			<div className="md:block hidden">
 				<Lens className="rounded-none animate-fade-right">
 					<Image

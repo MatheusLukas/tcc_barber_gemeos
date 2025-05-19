@@ -14,10 +14,12 @@ import { Label } from "@/src/components/ui/label";
 import { queryClient } from "@/src/lib/query-client";
 import { cn } from "@/src/lib/utils";
 import { createJob } from "@/src/server/admin/createJob";
+import { getJobById } from "@/src/server/schedule/getJobById";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Plus, X } from "lucide-react";
-import { useId, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -31,19 +33,48 @@ export type schemaJobType = z.infer<typeof schemaJob>;
 
 export function ModalCreateJob() {
 	const [isOpen, setIsOpen] = useState(false);
+
+	const searchParams = useSearchParams();
+	const jobId = searchParams.get("jobId") ?? "";
+
+	useEffect(() => {
+		if (jobId) {
+			setIsOpen(true);
+		}
+	}, [jobId]);
+
+	const { data: job } = useQuery({
+		queryKey: ["getJob", jobId],
+		queryFn: async () => {
+			const [data, _] = await getJobById({
+				jobsId: [jobId],
+			});
+			return data;
+		},
+		enabled: !!jobId,
+	});
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 		reset,
+		setValue,
 	} = useForm<schemaJobType>({
 		resolver: zodResolver(schemaJob),
 	});
+
+	useEffect(() => {
+		if (!job) return;
+		setValue("name", job?.[0].name);
+		setValue("price", job?.[0].price);
+	}, [job]);
 
 	const { mutateAsync, isLoading } = useMutation({
 		mutationKey: ["create-job"],
 		mutationFn: async (data: schemaJobType) => {
 			const [_, err] = await createJob({
+				id: job?.[0].id,
 				name: data.name,
 				price: data.price,
 			});
@@ -51,11 +82,21 @@ export function ModalCreateJob() {
 			if (err) {
 				toast.error(err.data);
 			} else {
-				toast.success("Serviço adicionado com sucesso");
+				toast.success(
+					`Serviço ${jobId ? "atualizado" : "adicionado"} com sucesso`,
+				);
 				reset();
 				setIsOpen(false);
 				queryClient.invalidateQueries(["jobs"]);
 			}
+		},
+		onSuccess: () => {
+			if (jobId) {
+				const newUrl = new URL(window.location.href);
+				newUrl.searchParams.delete("jobId");
+				window.history.pushState({}, "", newUrl.toString());
+			}
+			reset();
 		},
 	});
 
@@ -63,7 +104,7 @@ export function ModalCreateJob() {
 
 	const onSubmit = (data: schemaJobType) => {
 		toast.promise(mutateAsync(data), {
-			loading: "Adicionando Serviço...",
+			loading: `${jobId ? "Atualizando" : "Adicionando"} Serviço`,
 		});
 	};
 

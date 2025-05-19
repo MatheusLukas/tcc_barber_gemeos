@@ -129,7 +129,7 @@ const ChoiceboxItem = ({
 				<div className="flex w-full items-center justify-between gap-2">
 					<div className="flex gap-x-2.5">
 						{Icon && (
-							<Icon className="dark:!text-white" data-slot="choicebox-icon" />
+							<Icon className="!text-white" data-slot="choicebox-icon" />
 						)}
 						<div className="flex flex-col gap-y-1 pr-8">
 							<Label slot="title" className="text-sm/4" htmlFor={textValue}>
