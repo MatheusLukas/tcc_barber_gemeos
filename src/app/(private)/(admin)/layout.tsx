@@ -31,7 +31,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 						once
 					>
 						<ModeToggle />
-						<DropdownUserMenu />
+						<DropdownUserMenu isAdmin={false} />
 					</Animation>
 				</header>
 				<div className="bg-sidebar overflow-x-hidden">

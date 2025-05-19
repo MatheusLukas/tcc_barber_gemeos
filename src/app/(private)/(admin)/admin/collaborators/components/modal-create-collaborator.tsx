@@ -17,13 +17,16 @@ import {
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
 import { ROLES } from "@/src/enum/roles";
+import { queryClient } from "@/src/lib/query-client";
 import { cn } from "@/src/lib/utils";
 import { createCollaborator } from "@/src/server/admin/createCollaborator";
+import { getCollaboratorById } from "@/src/server/admin/getCollaboratorById";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Plus, X } from "lucide-react";
 import Image from "next/image";
-import { useId, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useId, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -42,6 +45,27 @@ export type schemaCollaboratorType = z.infer<typeof schemaCollaborator>;
 
 export function ModalCreateCollaborator() {
 	const [isOpen, setIsOpen] = useState(false);
+
+	const searchParams = useSearchParams();
+	const collaboratorId = searchParams.get("collaboratorId") ?? "";
+
+	useEffect(() => {
+		if (collaboratorId) {
+			setIsOpen(true);
+		}
+	}, [collaboratorId]);
+
+	const { data: barber } = useQuery({
+		queryKey: ["getBarber", collaboratorId],
+		queryFn: async () => {
+			const [data, _] = await getCollaboratorById({
+				collaboratorId: collaboratorId,
+			});
+			return data;
+		},
+		enabled: !!collaboratorId,
+	});
+
 	const {
 		register,
 		handleSubmit,
@@ -49,14 +73,30 @@ export function ModalCreateCollaborator() {
 		control,
 		reset,
 		watch,
+		setValue,
 	} = useForm<schemaCollaboratorType>({
 		resolver: zodResolver(schemaCollaborator),
 	});
+
+	useEffect(() => {
+		if (!barber) return;
+		setValue("name", barber.name);
+		fetch(barber.image)
+			.then((response) => response.blob())
+			.then((blob) => {
+				const file = new File([blob], "avatar.png", { type: blob.type });
+				setValue("avatar", file);
+			});
+		setValue("email", barber.email);
+		setValue("role", barber.role);
+		setValue("password", barber.password!);
+	}, [barber]);
 
 	const { mutateAsync, isLoading } = useMutation({
 		mutationKey: ["create-collaborator"],
 		mutationFn: async (data: schemaCollaboratorType) => {
 			const [response, err] = await createCollaborator({
+				id: collaboratorId,
 				name: data.name,
 				email: data.email,
 				role: data.role,
@@ -70,10 +110,21 @@ export function ModalCreateCollaborator() {
 			if (err) {
 				toast.error(err.data);
 			} else {
-				toast.success("Colaborador criado com sucesso");
+				toast.success(
+					`Colaborador ${collaboratorId ? "atualizado" : "criado"} com sucesso`,
+				);
 				reset();
 				setIsOpen(false);
+				queryClient.invalidateQueries(["getBarberInfo"]);
 			}
+		},
+		onSuccess: () => {
+			if (collaboratorId) {
+				const newUrl = new URL(window.location.href);
+				newUrl.searchParams.delete("collaboratorId");
+				window.history.pushState({}, "", newUrl.toString());
+			}
+			reset();
 		},
 	});
 
@@ -83,7 +134,7 @@ export function ModalCreateCollaborator() {
 
 	const onSubmit = (data: schemaCollaboratorType) => {
 		toast.promise(mutateAsync(data), {
-			loading: "Criando colaborador...",
+			loading: `${collaboratorId ? "Atualizando" : "Criando"} colaborador...`,
 		});
 	};
 
@@ -152,30 +203,34 @@ export function ModalCreateCollaborator() {
 							</span>
 						)}
 					</div>
-					<div className="space-y-2">
-						<Label>Email</Label>
-						<Input
-							className={cn(errors.email && "border-destructive")}
-							{...register("email")}
-						/>
-						{errors.email && (
-							<span className="text-destructive text-sm">
-								{errors.email.message}
-							</span>
-						)}
-					</div>
-					<div className="space-y-2">
-						<Label>Senha</Label>
-						<Input
-							className={cn(errors.password && "border-destructive")}
-							{...register("password")}
-						/>
-						{errors.password && (
-							<span className="text-destructive text-sm">
-								{errors.password.message}
-							</span>
-						)}
-					</div>
+					{!barber && (
+						<div className="space-y-2">
+							<Label>Email</Label>
+							<Input
+								className={cn(errors.email && "border-destructive")}
+								{...register("email")}
+							/>
+							{errors.email && (
+								<span className="text-destructive text-sm">
+									{errors.email.message}
+								</span>
+							)}
+						</div>
+					)}
+					{!barber && (
+						<div className="space-y-2">
+							<Label>Senha</Label>
+							<Input
+								className={cn(errors.password && "border-destructive")}
+								{...register("password")}
+							/>
+							{errors.password && (
+								<span className="text-destructive text-sm">
+									{errors.password.message}
+								</span>
+							)}
+						</div>
+					)}
 					<div className="space-y-2">
 						<Label className={cn(errors.role && "border-destructive")}>
 							Cargo

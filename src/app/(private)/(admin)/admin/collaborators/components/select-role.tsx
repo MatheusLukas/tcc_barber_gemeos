@@ -16,6 +16,7 @@ type Props = {
 };
 
 export function SelectRole({ field }: Props) {
+	console.log(field.value);
 	return (
 		<Select onValueChange={field.onChange} defaultValue={field.value}>
 			<SelectTrigger>

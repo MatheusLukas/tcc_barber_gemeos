@@ -11,10 +11,12 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const roleEnum = pgEnum("role", ["admin", "user", "collaborator"]);
-export const paymentMethodEnum = pgEnum("paymentMethod", [
-	"cash",
-	"card",
-	"pix",
+export const statusEnum = pgEnum("status", [
+	"pending",
+	"confirmed",
+	"canceled",
+	"refunded",
+	"no_payed",
 ]);
 
 export const user = pgTable("user", {
@@ -27,7 +29,7 @@ export const user = pgTable("user", {
 	updatedAt: timestamp("updated_at").notNull(),
 	phoneNumber: text("phone_number"),
 	phoneNumberVerified: boolean("phone_number_verified"),
-	role: text("role"),
+	role: roleEnum("role").notNull(),
 	banned: boolean("banned"),
 	banReason: text("ban_reason"),
 	banExpires: timestamp("ban_expires"),
@@ -93,6 +95,7 @@ export const schedule = pgTable("schedule", {
 	date: timestamp("date").notNull(),
 	price: doublePrecision("price").notNull(),
 	paymentMethod: text("payment_method").notNull(),
+	status: statusEnum("status").notNull(),
 });
 
 export const scheduleHasJobs = pgTable("scheduleHasJobs", {

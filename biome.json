@@ -64,7 +64,8 @@
 				"useConsistentCurlyBraces": "warn",
 				"noSecrets": "off",
 				"useExplicitType": "off",
-				"noProcessEnv": "off"
+				"noProcessEnv": "off",
+				"noNestedTernary": "off"
 			}
 		}
 	},

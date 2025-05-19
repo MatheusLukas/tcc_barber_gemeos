@@ -91,7 +91,7 @@ export function FormSignUp() {
 	];
 
 	return (
-		<div className="flex flex-col justify-center container items-center animate-fade-left h-fit md:h-screen py-10 md:py-0 overflow-x-hidden">
+		<div className="flex flex-col justify-center container items-center animate-fade-left h-screen py-10 overflow-x-hidden">
 			<Image src="/logo.svg" alt="Logo" priority width={200} height={200} />
 			<div className="flex flex-col gap-2 items-center">
 				<TypewriterEffectSmooth words={words} />

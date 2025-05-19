@@ -29,6 +29,8 @@ export default async function authMiddleware(request: NextRequest) {
 	const redirectUrl = request.nextUrl.clone();
 	const sessionCookie = getSessionCookie(request);
 
+	console.log(sessionCookie, "teste");
+
 	if (pathname === "/reset-password" && !searchParams.has("token")) {
 		redirectUrl.pathname = "/";
 		return NextResponse.redirect(redirectUrl.href);
@@ -63,6 +65,6 @@ export const config = {
 		 * - _next/image (image optimization files)
 		 * - favicon.ico, sitemap.xml, robots.txt (metadata files)
 		 */
-		"/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*.svg$).*)",
+		"/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|public).*)",
 	],
 };

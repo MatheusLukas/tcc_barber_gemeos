@@ -5,6 +5,7 @@ import { Choicebox } from "@/src/components/ui/choicebox";
 import { ScrollArea } from "@/src/components/ui/scroll-area";
 import { Skeleton } from "@/src/components/ui/skeleton";
 import { useSession } from "@/src/lib/auth-client";
+import { queryClient } from "@/src/lib/query-client";
 import { cn } from "@/src/lib/utils";
 import { getAllBarbers } from "@/src/server/getAllBarbers";
 import { getAllJobs } from "@/src/server/getAllJobs";
@@ -36,7 +37,7 @@ const paymenthMethods = [
 
 const schemaSchedule = z.object({
 	barberId: z.string(),
-	date: z.coerce.date(),
+	date: z.date(),
 	jobId: z.array(z.string()),
 	methodPayment: z.number(),
 });
@@ -46,6 +47,7 @@ export type schemaScheduleType = z.infer<typeof schemaSchedule>;
 export function ScheduleComponent() {
 	const [hovered, setHovered] = useState<number | null>(null);
 	const [clicked, setClicked] = useState<number | null>(null);
+	const [barberId, setBarberId] = useState<string | undefined>(undefined);
 	const formId = useId();
 
 	const {
@@ -61,15 +63,21 @@ export function ScheduleComponent() {
 
 	const { data: barbers, isLoading: isLoadingBarbers } = useQuery({
 		queryKey: ["barbers"],
-		queryFn: async () => getAllBarbers(),
+		queryFn: async () => {
+			const [data, _] = await getAllBarbers();
+			return data;
+		},
 	});
 
 	const { data: jobs, isLoading: isLoadingJobs } = useQuery({
 		queryKey: ["jobs"],
-		queryFn: async () => getAllJobs(),
+		queryFn: async () => {
+			const [data, _] = await getAllJobs();
+			return data;
+		},
 	});
 
-	const jobItems = (jobs?.[0] ?? []).map((item, index) => ({
+	const jobItems = jobs?.map((item, index) => ({
 		...item,
 		_index: index,
 	}));
@@ -79,9 +87,12 @@ export function ScheduleComponent() {
 	const { mutateAsync, isLoading } = useMutation({
 		mutationKey: ["create-schedule"],
 		mutationFn: async (data: schemaScheduleType) => {
-			const [_, err] = await createSchedule({
+			console.log("data", data.barberId);
+			const [response, err] = await createSchedule({
 				userId: user!.user!.id!,
-				barberId: data.barberId,
+				userName: user!.user!.name!,
+				userEmail: user!.user!.email!,
+				barberId: barberId!,
 				date: data.date,
 				jobsId: data.jobId,
 				methodPayment: data.methodPayment,
@@ -94,7 +105,16 @@ export function ScheduleComponent() {
 				reset();
 				setHovered(null);
 				setClicked(null);
+				setBarberId(undefined);
 			}
+
+			return response;
+		},
+		onSuccess: (response) => {
+			if (response) {
+				window.open(response, "_blank");
+			}
+			queryClient.invalidateQueries(["freeHours", barberId]);
 		},
 	});
 
@@ -112,7 +132,7 @@ export function ScheduleComponent() {
 		>
 			<p className="text-3xl font-bold">Agendamento</p>
 			<p className="text-2xl font-medium">Selecione um barbeiro</p>
-			<div className="grid grid-cols-4">
+			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 max-sm:place-items-center">
 				{isLoadingBarbers ? (
 					<>
 						<div className="h-[296px] w-[216px] p-2 space-y-2">
@@ -145,13 +165,17 @@ export function ScheduleComponent() {
 						</div>
 					</>
 				) : (
-					barbers?.[0]?.map((barber, idx) => (
+					barbers?.map((barber, idx) => (
 						<button
 							key={barber?.id}
 							type="button"
 							onMouseEnter={() => setHovered(idx)}
 							onMouseLeave={() => setHovered(null)}
-							onClick={() => setClicked(idx)}
+							onClick={() => {
+								console.log("barber", barber.id);
+								setClicked(idx);
+								setBarberId(barber.id);
+							}}
 							className={cn(
 								"hover:bg-muted w-fit p-2 rounded-lg transition-all duration-500",
 								hovered !== null &&
@@ -179,11 +203,15 @@ export function ScheduleComponent() {
 			<p className="text-2xl font-medium">
 				Selecione o serviço e o dia desejado!
 			</p>
-			<div className="grid grid-cols-2 gap-4">
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 				<Controller
 					control={control}
 					render={({ field }) => (
-						<DateTimePicker24h field={field} disabled={clicked === null} />
+						<DateTimePicker24h
+							barberId={barberId}
+							field={field}
+							disabled={clicked === null}
+						/>
 					)}
 					name="date"
 				/>
@@ -261,7 +289,9 @@ export function ScheduleComponent() {
 					)}
 				</Choicebox>
 				<div className="w-full flex gap-4 justify-end">
-					<Button variant="outline">Cancelar</Button>
+					<Button onClick={() => reset()} variant="outline">
+						Cancelar
+					</Button>
 					<Button
 						form={formId}
 						onClick={() => {
@@ -272,7 +302,9 @@ export function ScheduleComponent() {
 							if (errors.methodPayment) errorFields.push("Método de Pagamento");
 
 							const textError = `Você deve preencher o(s) campo(s) ${errorFields.join(", ")}`;
-							toast.error(textError);
+							if (errorFields.length !== 0) {
+								toast.error(textError);
+							}
 						}}
 						disabled={isLoading}
 					>
