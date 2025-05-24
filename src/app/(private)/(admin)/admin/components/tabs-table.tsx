@@ -16,8 +16,8 @@ export function TabsTable() {
 	const [filterValue, setFilterValue] = useState("");
 
 	return (
-		<div className="w-full">
-			<Tabs defaultValue="abertos" className="w-full">
+		<div>
+			<Tabs defaultValue="abertos">
 				<TabsList className="bg-transparent p-0 h-auto flex justify-between">
 					<div className="h-10 flex">
 						<Animation delay={0.7} once direction="down">

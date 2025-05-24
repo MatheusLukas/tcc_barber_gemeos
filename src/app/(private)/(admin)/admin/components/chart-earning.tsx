@@ -4,7 +4,6 @@ import {
 	BarChart,
 	CartesianGrid,
 	LabelList,
-	ResponsiveContainer,
 	XAxis,
 	YAxis,
 } from "recharts";
@@ -95,57 +94,58 @@ function NoDataAlert() {
 // Componente do gráfico propriamente dito
 function ChartContent({ data }: { data: ChartDisplayProps[] }) {
 	return (
-		<ChartContainer config={chartConfig}>
-			<ResponsiveContainer width="100%" height={300}>
-				<BarChart
-					accessibilityLayer
-					data={data}
-					margin={{
-						top: 25,
-						left: 0,
-						right: 20,
-						bottom: 5,
-					}}
-				>
-					<CartesianGrid vertical={false} />
-					<XAxis
-						dataKey="date"
-						tickLine={false}
-						tickMargin={10}
-						axisLine={false}
-					/>
-					<YAxis
-						tickLine={false}
-						axisLine={false}
-						tickMargin={4}
-						tickCount={6}
-						width={30}
-						tickFormatter={(value) => value}
-					/>
-					<ChartTooltip
-						cursor={false}
-						content={
-							<ChartTooltipContent
-								formatter={(value) => formatCurrency(Number(value))}
-							/>
-						}
-					/>
-					<Bar
-						dataKey="ganhos"
-						name="Ganhos"
-						fill="var(--color-earnings)"
-						radius={8}
-					>
-						<LabelList
-							position="top"
-							offset={12}
-							className="fill-foreground"
-							fontSize={12}
-							formatter={(value: number) => formatCurrency(value)}
+		<ChartContainer
+			className="max-2xl:h-80 max-2xl:w-full"
+			config={chartConfig}
+		>
+			<BarChart
+				accessibilityLayer
+				data={data}
+				margin={{
+					top: 25,
+					left: 0,
+					right: 20,
+					bottom: 5,
+				}}
+			>
+				<CartesianGrid vertical={false} />
+				<XAxis
+					dataKey="date"
+					tickLine={false}
+					tickMargin={10}
+					axisLine={false}
+				/>
+				<YAxis
+					tickLine={false}
+					axisLine={false}
+					tickMargin={4}
+					tickCount={6}
+					width={30}
+					tickFormatter={(value) => value}
+				/>
+				<ChartTooltip
+					cursor={false}
+					content={
+						<ChartTooltipContent
+							formatter={(value) => formatCurrency(Number(value))}
 						/>
-					</Bar>
-				</BarChart>
-			</ResponsiveContainer>
+					}
+				/>
+				<Bar
+					dataKey="ganhos"
+					name="Ganhos"
+					fill="var(--color-earnings)"
+					radius={8}
+				>
+					<LabelList
+						position="top"
+						offset={12}
+						className="fill-foreground"
+						fontSize={12}
+						formatter={(value: number) => formatCurrency(value)}
+					/>
+				</Bar>
+			</BarChart>
 		</ChartContainer>
 	);
 }
@@ -181,8 +181,8 @@ export function ChartEarning() {
 		data.length === 0 || data.every((item) => item.ganhos === 0);
 
 	return (
-		<Animation once direction="down">
-			<Card className="size-full">
+		<Animation className="h-full" once direction="down">
+			<Card className="w-full h-fit">
 				<CardHeader>
 					<Animation once direction="left" delay={0.6}>
 						<CardTitle>Ganhos</CardTitle>

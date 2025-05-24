@@ -31,7 +31,7 @@ export default function Collaborators() {
 					<ModalCreateCollaborator />
 				</Animation>
 			</div>
-			<div className="grid xl:grid-cols-4 grid-cols-3 2xl:grid-cols-5 gap-y-2">
+			<div className="grid xl:grid-cols-4 2xl:grid-cols-5 grid-cols-1 sm:grid-cols-2 gap-y-2">
 				<ShowCollaborators />
 			</div>
 			<div className="flex justify-between items-center">

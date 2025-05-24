@@ -139,24 +139,29 @@ export function ChartSchedule() {
 	}, [data]);
 
 	return (
-		<Animation once direction="down">
-			<Card className="flex flex-col size-full">
+		<Animation className="h-full" once direction="down">
+			<Card className="flex flex-col w-full h-full">
 				<CardHeader>
 					<Animation once direction="left" delay={0.6}>
 						<CardTitle>Atendimentos por Barbeiro</CardTitle>
 					</Animation>
 				</CardHeader>
 				<CardContent className="pb-0">
-					<Animation once direction="up" delay={0.6}>
+					<Animation
+						className="size-full h-full"
+						once
+						direction="up"
+						delay={0.6}
+					>
 						{isLoading ? (
 							<ChartSkeleton />
 						) : isError || hasNoData ? (
 							<NoDataAlert />
 						) : (
-							<div className="grid grid-cols-[4fr_8fr]">
+							<div className="grid grid-cols-[4fr_8fr] max-xl:grid-rows-2 max-xl:grid-cols-1">
 								<ChartContainer
 									config={chartConfig}
-									className="aspect-square w-full h-72"
+									className="max-2xl:h-80 max-2xl:w-full"
 								>
 									<PieChart>
 										<ChartTooltip
