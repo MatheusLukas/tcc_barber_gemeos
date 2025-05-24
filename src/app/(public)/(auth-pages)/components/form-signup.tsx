@@ -51,15 +51,10 @@ export function FormSignUp() {
 							image: undefined,
 						},
 						{
-							onRequest: () => {
-								console.log("Requesting...");
-							},
 							onSuccess: (data) => {
-								console.log("Success", data);
 								resolve(data);
 							},
 							onError: (error) => {
-								console.log("Error", error);
 								reject(error);
 							},
 						},

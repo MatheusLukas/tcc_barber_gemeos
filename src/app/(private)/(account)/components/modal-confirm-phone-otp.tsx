@@ -80,7 +80,6 @@ export function ModalConfirmPhoneOtp({
 		}
 	};
 
-	console.log(open, "open");
 	return (
 		<AlertDialog open={open} onOpenChange={onClose}>
 			<AlertDialogContent>

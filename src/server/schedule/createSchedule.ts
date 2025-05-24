@@ -20,7 +20,6 @@ export const createSchedule = createServerAction()
 		}),
 	)
 	.handler(async ({ input }) => {
-		console.log(input.date, "input");
 		const existingSchedule = await db
 			.select()
 			.from(schedule)
@@ -30,7 +29,6 @@ export const createSchedule = createServerAction()
 					eq(schedule.date, input.date),
 				),
 			);
-		console.log(existingSchedule, "existingSchedule");
 		if (existingSchedule.length > 0) {
 			throw "Já existe um agendamento para este barbeiro neste horário.";
 		}
@@ -43,8 +41,6 @@ export const createSchedule = createServerAction()
 		const [data, _] = await getJobById({
 			jobsId: input.jobsId,
 		});
-
-		console.log("estágio 1");
 
 		const total_price =
 			data?.reduce((acc, item) => {
@@ -64,16 +60,12 @@ export const createSchedule = createServerAction()
 			})
 			.returning({ insertedId: schedule.id });
 
-		console.log(scheduleId, "aqui");
-
 		data?.map(async (job) => {
 			await db.insert(scheduleHasJobs).values({
 				scheduleId: scheduleId[0].insertedId,
 				jobId: job.id,
 			});
 		});
-
-		console.log("estágio 2");
 
 		if (input.methodPayment === 1) {
 			const [response, _] = await createOrder({

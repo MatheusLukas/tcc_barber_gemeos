@@ -60,22 +60,16 @@ export function CardResetPassword() {
 						token,
 					},
 					{
-						onRequest: () => {
-							console.log("Requesting...");
-						},
 						onSuccess: (data) => {
-							console.log("Success", data);
 							resolve(data);
 							router.push("/login");
 						},
 						onError: (error) => {
-							console.log("Error", error);
 							reject(error.error);
 						},
 					},
 				);
 			} catch (error) {
-				console.log("Error", error);
 				reject(error);
 			}
 		});

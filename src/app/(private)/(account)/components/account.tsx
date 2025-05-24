@@ -40,7 +40,6 @@ export function Account() {
 	});
 
 	const userData = user ? user[0] : null;
-	console.log("userData", userData);
 
 	const {
 		register,

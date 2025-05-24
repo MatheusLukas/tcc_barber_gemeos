@@ -30,7 +30,7 @@ const items = [
 	},
 	{
 		title: "Estoque",
-		url: "/admin/estoque",
+		url: "/admin/stock",
 		icon: Package,
 	},
 	{

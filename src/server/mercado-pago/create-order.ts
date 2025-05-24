@@ -40,7 +40,5 @@ export const createOrder = createServerAction()
 			},
 		});
 
-		console.log("init_point", init_point);
-
 		return init_point;
 	});

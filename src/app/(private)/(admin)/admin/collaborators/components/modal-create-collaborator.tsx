@@ -104,9 +104,6 @@ export function ModalCreateCollaborator() {
 				password: data.password,
 			});
 
-			console.log(response, "response");
-			console.log(err, "err");
-
 			if (err) {
 				toast.error(err.data);
 			} else {
