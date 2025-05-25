@@ -7,6 +7,9 @@ import {
 	TabsList,
 	TabsTrigger,
 } from "@/src/components/ui/tabs";
+import { getScheduleClosed } from "@/src/server/admin/getScheduleClosed";
+import { getSchedulePending } from "@/src/server/admin/getSchedulePending";
+import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { useState } from "react";
 import { FilterClient } from "./filter-client";
@@ -14,6 +17,24 @@ import { TableClients } from "./table-clients";
 
 export function TabsTable() {
 	const [filterValue, setFilterValue] = useState("");
+
+	const { data: schedulePending, isLoading } = useQuery({
+		queryKey: ["schedulePending"],
+		queryFn: async () => {
+			const [data, _] = await getSchedulePending();
+			console.log(data);
+			return data;
+		},
+	});
+
+	const { data: scheduleClosed, isLoading: isLoadingClosed } = useQuery({
+		queryKey: ["scheduleClosed"],
+		queryFn: async () => {
+			const [data, _] = await getScheduleClosed();
+			console.log(data);
+			return data;
+		},
+	});
 
 	return (
 		<div>
@@ -63,6 +84,8 @@ export function TabsTable() {
 						<TableClients
 							filterValue={filterValue}
 							setFilter={setFilterValue}
+							data={schedulePending ?? []}
+							isLoading={isLoading}
 						/>
 					</Animation>
 				</TabsContent>
@@ -72,6 +95,8 @@ export function TabsTable() {
 						<TableClients
 							filterValue={filterValue}
 							setFilter={setFilterValue}
+							data={scheduleClosed ?? []}
+							isLoading={isLoadingClosed}
 						/>
 					</Animation>
 				</TabsContent>
