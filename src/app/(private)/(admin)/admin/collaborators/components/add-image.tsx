@@ -4,10 +4,13 @@ import { Pen } from "lucide-react";
 import { useState } from "react";
 import type { ControllerRenderProps } from "react-hook-form";
 import { toast } from "sonner";
+import type { schemaProductType } from "../../stock/components/modal-create-product";
 import type { schemaCollaboratorType } from "./modal-create-collaborator";
 
 type Props = {
-	field: ControllerRenderProps<schemaCollaboratorType, "avatar">;
+	field:
+		| ControllerRenderProps<schemaCollaboratorType, "avatar">
+		| ControllerRenderProps<schemaProductType, "image">;
 	className?: string;
 };
 

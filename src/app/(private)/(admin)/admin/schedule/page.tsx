@@ -19,7 +19,7 @@ export default function ScheduleAdmin() {
 					</p>
 				</Animation>
 			</div>
-			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 2xl:grid-cols-5 2xl:gap-20 sm:bg-red-500 md:bg-green-500 lg:bg-yellow-500 xl:bg-teal-500 2xl:bg-fuchsia-500">
+			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 2xl:grid-cols-5 2xl:gap-20">
 				<ShowInfosBarber />
 			</div>
 			<div className="space-y-4">
