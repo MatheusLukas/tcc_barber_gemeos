@@ -1,6 +1,8 @@
 "use client";
 import { Animation } from "@/src/components/animation";
 import { Input } from "@/src/components/ui/input";
+import { getSchedules } from "@/src/server/admin/getSchedules";
+import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { useState } from "react";
 import { FilterSchedule } from "./components/filter-schedule";
@@ -9,6 +11,14 @@ import { TableSchedule } from "./components/table-schedule";
 
 export default function ScheduleAdmin() {
 	const [filterValue, setFilterValue] = useState("");
+
+	const { data: schedules, isLoading } = useQuery({
+		queryKey: ["schedules"],
+		queryFn: async () => {
+			const [data, _] = await getSchedules();
+			return data;
+		},
+	});
 
 	return (
 		<div className="space-y-4">
@@ -43,7 +53,12 @@ export default function ScheduleAdmin() {
 					</Animation>
 				</div>
 				<Animation direction="up">
-					<TableSchedule filterValue={filterValue} setFilter={setFilterValue} />
+					<TableSchedule
+						filterValue={filterValue}
+						setFilter={setFilterValue}
+						data={schedules ?? []}
+						isLoading={isLoading}
+					/>
 				</Animation>
 			</div>
 		</div>
