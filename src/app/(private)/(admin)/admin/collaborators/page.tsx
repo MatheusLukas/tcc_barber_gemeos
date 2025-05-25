@@ -2,6 +2,8 @@
 import { Animation } from "@/src/components/animation";
 import { Input } from "@/src/components/ui/input";
 import { ScrollArea } from "@/src/components/ui/scroll-area";
+import { getBarbers } from "@/src/server/admin/getBarbers";
+import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { useState } from "react";
 import { FilterCollaborator } from "./components/filter-collaborator";
@@ -13,6 +15,14 @@ import { TableCollaborators } from "./components/table-collaborators";
 
 export default function Collaborators() {
 	const [filterValue, setFilterValue] = useState("");
+
+	const { data: barbers, isLoading } = useQuery({
+		queryKey: ["getBarbers"],
+		queryFn: async () => {
+			const [data, _] = await getBarbers();
+			return data;
+		},
+	});
 
 	return (
 		<div className="space-y-4">
@@ -76,6 +86,8 @@ export default function Collaborators() {
 					<TableCollaborators
 						filterValue={filterValue}
 						setFilter={setFilterValue}
+						data={barbers ?? []}
+						isLoading={isLoading}
 					/>
 				</Animation>
 			</div>
