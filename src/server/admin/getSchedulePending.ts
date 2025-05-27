@@ -9,6 +9,7 @@ import {
 } from "@/src/db/schema";
 import { formatNumberToCurrency } from "@/src/utils/formatNumberToCurrency";
 import { and, eq, gte, or } from "drizzle-orm";
+import { z } from "zod";
 import { createServerAction } from "zsa";
 
 export const getSchedulePending = createServerAction().handler(async () => {
@@ -47,10 +48,8 @@ export const getSchedulePending = createServerAction().handler(async () => {
 
 			return {
 				id: schedule.id,
-				client: {
-					name: userFinded[0].name,
-					image: userFinded[0].image,
-				},
+				name: userFinded[0].name,
+				image: userFinded[0].image,
 				price: formatNumberToCurrency(schedule.price),
 				date: schedule.date.toLocaleDateString("pt-BR", {
 					day: "2-digit",
@@ -73,3 +72,43 @@ export const getSchedulePending = createServerAction().handler(async () => {
 
 	return scheduleFormatted;
 });
+
+export const getUserSchedulePending = createServerAction()
+	.input(
+		z.object({
+			userId: z.string(),
+		}),
+	)
+	.handler(async ({ input }) => {
+		const scheduleReturning = await db
+			.select()
+			.from(schedule)
+			.where(
+				and(
+					eq(schedule.userId, input.userId),
+					or(eq(schedule.status, "pending"), eq(schedule.status, "no_payed")),
+				),
+			);
+
+		return scheduleReturning;
+	});
+
+export const getUserSchedulesConcluded = createServerAction()
+	.input(
+		z.object({
+			userId: z.string(),
+		}),
+	)
+	.handler(async ({ input }) => {
+		const scheduleReturning = await db
+			.select()
+			.from(schedule)
+			.where(
+				and(
+					eq(schedule.userId, input.userId),
+					or(eq(schedule.status, "confirmed"), eq(schedule.status, "refunded")),
+				),
+			);
+
+		return scheduleReturning;
+	});

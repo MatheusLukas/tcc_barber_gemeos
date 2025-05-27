@@ -39,10 +39,8 @@ export const getSchedules = createServerAction().handler(async () => {
 
 			return {
 				id: schedule.id,
-				client: {
-					name: userFinded[0].name,
-					image: userFinded[0].image,
-				},
+				name: userFinded[0].name,
+				image: userFinded[0].image,
 				price: formatNumberToCurrency(schedule.price),
 				date: schedule.date.toLocaleDateString("pt-BR", {
 					day: "2-digit",

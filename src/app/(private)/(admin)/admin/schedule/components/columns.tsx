@@ -25,10 +25,8 @@ import { toast } from "sonner";
 
 export type Appointment = {
 	id: string;
-	client: {
-		name: string;
-		image: string | null;
-	};
+	name: string;
+	image: string | null;
 	price: string;
 	date: string;
 	time: string;
@@ -45,7 +43,7 @@ export type Appointment = {
 
 export const columns: ColumnDef<Appointment>[] = [
 	{
-		accessorKey: "client",
+		accessorKey: "name",
 		header: ({ column }) => {
 			return (
 				<Button
@@ -63,25 +61,22 @@ export const columns: ColumnDef<Appointment>[] = [
 		cell: ({ row }) => {
 			return (
 				<div className="flex items-center gap-2">
-					{row.original.client.image && (
+					{row.original.image && (
 						<Avatar className="h-6 w-6">
-							<AvatarImage
-								src={row.original.client.image}
-								alt={row.original.client.name}
-							/>
+							<AvatarImage src={row.original.image} alt={row.original.name} />
 							<AvatarFallback>
-								{row.original.client.name.split(" ")[0][0].toUpperCase()}
+								{row.original.name.split(" ")[0][0].toUpperCase()}
 							</AvatarFallback>
 						</Avatar>
 					)}
-					{!row.original.client.image && (
+					{!row.original.image && (
 						<Avatar className="h-6 w-6">
 							<AvatarFallback>
-								{row.original.client.name.split(" ")[0][0].toUpperCase()}
+								{row.original.name.split(" ")[0][0].toUpperCase()}
 							</AvatarFallback>
 						</Avatar>
 					)}
-					<span>{row.original.client.name}</span>
+					<span>{row.original.name}</span>
 				</div>
 			);
 		},

@@ -3,10 +3,8 @@ import { columns } from "./columns";
 
 type Barber = {
 	id: string;
-	barberInfo: {
-		name: string;
-		image: string;
-	};
+	name: string;
+	image: string;
 	role: string;
 	email: string;
 };
@@ -26,7 +24,7 @@ export function TableCollaborators({
 }: TableClientsProps) {
 	return (
 		<DataTable
-			filterColumn="barberInfo"
+			filterColumn="name"
 			columns={columns}
 			data={data}
 			filterValue={filterValue}

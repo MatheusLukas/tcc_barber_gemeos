@@ -3,9 +3,11 @@
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
+import { ScrollArea } from "@/src/components/ui/scroll-area";
 import { phoneNumber, useSession } from "@/src/lib/auth-client";
 import { queryClient } from "@/src/lib/query-client";
 import { cn } from "@/src/lib/utils";
+import { getUserSchedulePending } from "@/src/server/admin/getSchedulePending";
 import { getUser } from "@/src/server/getUser";
 import { updateUserComunication } from "@/src/server/updateUserComunication";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -38,6 +40,18 @@ export function Account() {
 		queryFn: async () => await getUser({ userId: data?.user.id! }),
 		enabled: !!data?.user.id,
 	});
+
+	const { data: userPendingSchedules, isLoading: userPendingSchedulesLoading } =
+		useQuery({
+			queryKey: ["getUserPendingSchedules", data?.user.id],
+			queryFn: async () => {
+				const [scheduleData, _] = await getUserSchedulePending({
+					userId: data?.user.id!,
+				});
+				return scheduleData;
+			},
+			enabled: !!data?.user.id,
+		});
 
 	const userData = user ? user[0] : null;
 
@@ -93,6 +107,14 @@ export function Account() {
 
 	const handleCloseModal = () => {
 		setOpen(false);
+	};
+
+	const status = {
+		no_payed: "Sem pagamento",
+		refunded: "Reembolsado",
+		canceled: "Cancelado",
+		confirmed: "Confirmado",
+		pending: "Pendente",
 	};
 
 	return (
@@ -185,6 +207,19 @@ export function Account() {
 					phoneNumberUser={phoneNumberUser}
 				/>
 			</div>
+			<p className="text-4xl font-bold">Sua Agenda</p>
+			<ScrollArea className="w-full h-96 p-4 rounded-xl bg-muted mt-6 flex items-center justify-between">
+				{userPendingSchedules?.map((p_schedule) => (
+					<div
+						key={p_schedule.id}
+						className="flex items-center justify-center h-full"
+					>
+						<h2 className="text-4xl font-bold">
+							{status[p_schedule.status as keyof typeof status]}
+						</h2>
+					</div>
+				))}
+			</ScrollArea>
 		</motion.div>
 	);
 }

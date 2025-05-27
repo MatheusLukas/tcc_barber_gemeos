@@ -174,7 +174,9 @@ function NavbarMobile({ session }: Props) {
 
 function ButtonLogin() {
 	const { data: session } = useSession();
-	const isAdmin = session?.user?.role === ROLES.ADMIN;
+	const isAdmin =
+		session?.user?.role === ROLES.ADMIN ||
+		session?.user?.role === ROLES.COLLABORATOR;
 	return !session ? (
 		<Button
 			variant="secondary"

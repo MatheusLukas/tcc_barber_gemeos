@@ -10,17 +10,15 @@ import { ArrowUpDown } from "lucide-react";
 
 type Collaborators = {
 	id: string;
-	barberInfo: {
-		name: string;
-		image: string;
-	};
+	name: string;
+	image: string;
 	role: string;
 	email: string;
 };
 
 export const columns: ColumnDef<Collaborators>[] = [
 	{
-		accessorKey: "barberInfo",
+		accessorKey: "name",
 		header: ({ column }) => {
 			return (
 				<Button
@@ -38,25 +36,22 @@ export const columns: ColumnDef<Collaborators>[] = [
 		cell: ({ row }) => {
 			return (
 				<div className="flex items-center gap-2">
-					{row.original.barberInfo.image && (
+					{row.original.image && (
 						<Avatar className="h-6 w-6">
-							<AvatarImage
-								src={row.original.barberInfo.image}
-								alt={row.original.barberInfo.name}
-							/>
+							<AvatarImage src={row.original.image} alt={row.original.name} />
 							<AvatarFallback>
-								{row.original.barberInfo.name.split(" ")[0][0].toUpperCase()}
+								{row.original.name.split(" ")[0][0].toUpperCase()}
 							</AvatarFallback>
 						</Avatar>
 					)}
-					{!row.original.barberInfo.image && (
+					{!row.original.image && (
 						<Avatar className="h-6 w-6">
 							<AvatarFallback>
-								{row.original.barberInfo.name.split(" ")[0][0].toUpperCase()}
+								{row.original.name.split(" ")[0][0].toUpperCase()}
 							</AvatarFallback>
 						</Avatar>
 					)}
-					<span>{row.original.barberInfo.name}</span>
+					<span>{row.original.name}</span>
 				</div>
 			);
 		},

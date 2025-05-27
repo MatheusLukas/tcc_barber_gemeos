@@ -3,10 +3,8 @@ import { columns } from "./columns";
 
 type SchedulePending = {
 	id: string;
-	client: {
-		name: string;
-		image: string | null;
-	};
+	name: string;
+	image: string | null;
 	price: string;
 	date: string;
 	time: string;
@@ -35,7 +33,7 @@ export function TableClients({
 }: TableClientsProps) {
 	return (
 		<DataTable
-			filterColumn="client"
+			filterColumn="name"
 			columns={columns}
 			data={data ?? []}
 			filterValue={filterValue}
