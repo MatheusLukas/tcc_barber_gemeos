@@ -1,5 +1,6 @@
 "use client";
 import { Animation } from "@/src/components/animation";
+import { ResetFilters } from "@/src/components/reset-filters";
 import { Input } from "@/src/components/ui/input";
 import {
 	Tabs,
@@ -11,12 +12,18 @@ import { getScheduleClosed } from "@/src/server/admin/getScheduleClosed";
 import { getSchedulePending } from "@/src/server/admin/getSchedulePending";
 import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { parseAsString, useQueryState } from "nuqs";
 import { useState } from "react";
 import { FilterClient } from "./filter-client";
 import { TableClients } from "./table-clients";
 
 export function TabsTable() {
+	const params = useSearchParams();
 	const [filterValue, setFilterValue] = useState("");
+
+	const [filter] = useQueryState("jobs", parseAsString.withDefault(""));
+	console.log(filter, "here");
 
 	const { data: schedulePending, isLoading } = useQuery({
 		queryKey: ["schedulePending"],
@@ -76,6 +83,7 @@ export function TabsTable() {
 						<Animation delay={0.7} once direction="down">
 							<FilterClient />
 						</Animation>
+						{params.size > 0 && <ResetFilters />}
 					</div>
 				</TabsList>
 

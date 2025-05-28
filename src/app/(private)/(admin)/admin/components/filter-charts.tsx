@@ -1,6 +1,6 @@
 "use client";
 import { Animation } from "@/src/components/animation";
-import { Button } from "@/src/components/ui/button";
+import { ResetFilters } from "@/src/components/reset-filters";
 import {
 	Select,
 	SelectContent,
@@ -30,19 +30,9 @@ export function FilterCharts() {
 		router.push(`${pathname}?${searchParams.toString()}`);
 	};
 
-	const handleResetFilter = () => {
-		const searchParams = new URLSearchParams(params);
-		searchParams.delete("filter");
-		router.push(`${pathname}?${searchParams.toString()}`);
-	};
-
 	return (
 		<div className="flex items-center gap-2">
-			<Animation delay={0.1} once direction="left">
-				<Button disabled={!params.get("filter")} onClick={handleResetFilter}>
-					Resetar Filtro
-				</Button>
-			</Animation>
+			{params.size > 0 && <ResetFilters />}
 			<Animation delay={0.2} once direction="right">
 				<Select onValueChange={handleFilterChange}>
 					<SelectTrigger className="w-[180px]">

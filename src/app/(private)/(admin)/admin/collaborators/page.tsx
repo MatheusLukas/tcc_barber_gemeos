@@ -6,7 +6,6 @@ import { getBarbers } from "@/src/server/admin/getBarbers";
 import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { useState } from "react";
-import { FilterCollaborator } from "./components/filter-collaborator";
 import { ModalCreateCollaborator } from "./components/modal-create-collaborator";
 import { ModalCreateJob } from "./components/modal-create-job";
 import { ShowCollaborators } from "./components/show-collaborators";
@@ -77,9 +76,6 @@ export default function Collaborators() {
 							onChange={(e) => setFilterValue(e.target.value)}
 						/>
 						<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-					</Animation>
-					<Animation delay={0.7} once direction="left">
-						<FilterCollaborator />
 					</Animation>
 				</div>
 				<Animation direction="up">

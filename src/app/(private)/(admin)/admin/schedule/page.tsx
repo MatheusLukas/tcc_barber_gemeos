@@ -1,9 +1,11 @@
 "use client";
 import { Animation } from "@/src/components/animation";
+import { ResetFilters } from "@/src/components/reset-filters";
 import { Input } from "@/src/components/ui/input";
 import { getSchedules } from "@/src/server/admin/getSchedules";
 import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { FilterSchedule } from "./components/filter-schedule";
 import { ShowInfosBarber } from "./components/show-infos-barber";
@@ -11,7 +13,7 @@ import { TableSchedule } from "./components/table-schedule";
 
 export default function ScheduleAdmin() {
 	const [filterValue, setFilterValue] = useState("");
-
+	const params = useSearchParams();
 	const { data: schedules, isLoading } = useQuery({
 		queryKey: ["schedules"],
 		queryFn: async () => {
@@ -51,6 +53,7 @@ export default function ScheduleAdmin() {
 					<Animation delay={0.7} once direction="left">
 						<FilterSchedule />
 					</Animation>
+					{params.size > 0 && <ResetFilters />}
 				</div>
 				<Animation direction="up">
 					<TableSchedule
