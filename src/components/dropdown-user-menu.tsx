@@ -13,9 +13,10 @@ import {
 
 type Props = {
 	isAdmin: boolean;
+	image?: string;
 };
 
-export function DropdownUserMenu({ isAdmin }: Props) {
+export function DropdownUserMenu({ isAdmin, image }: Props) {
 	const router = useRouter();
 
 	const handleLogout = () => {
@@ -26,7 +27,7 @@ export function DropdownUserMenu({ isAdmin }: Props) {
 		<DropdownMenu>
 			<DropdownMenuTrigger>
 				<Avatar>
-					<AvatarImage src="https://github.com/shadcn.png" />
+					<AvatarImage src={image || "https://github.com/shadcn.png"} />
 					<AvatarFallback>CN</AvatarFallback>
 				</Avatar>
 			</DropdownMenuTrigger>

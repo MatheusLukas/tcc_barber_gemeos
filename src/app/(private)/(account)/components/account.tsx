@@ -28,11 +28,12 @@ import {
 	getUserSchedulePending,
 	getUserSchedulesConcluded,
 } from "@/src/server/admin/getSchedulePending";
+import { cancelSchedule } from "@/src/server/cancelSchedule";
 import { getUser } from "@/src/server/getUser";
 import { updateUserComunication } from "@/src/server/updateUserComunication";
 import { formatNumberToCurrency } from "@/src/utils/formatNumberToCurrency";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import * as motion from "framer-motion/client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -85,6 +86,25 @@ export function Account() {
 	});
 
 	const userData = user ? user[0] : null;
+
+	const { mutateAsync } = useMutation({
+		mutationKey: ["cancelSchedule"],
+		mutationFn: async (scheduleId: string) => {
+			const [result, error] = await cancelSchedule({ scheduleId });
+			if (error) {
+				throw new Error(error.message || "Failed to cancel schedule");
+			}
+			return result;
+		},
+		onSuccess: () => {
+			toast.success("Agendamento cancelado com sucesso!");
+			queryClient.invalidateQueries(["getUserPendingSchedules"]);
+			queryClient.invalidateQueries(["getUserConcludedSchedules"]);
+		},
+		onError: () => {
+			toast.error("Erro ao cancelar agendamento!");
+		},
+	});
 
 	const {
 		register,
@@ -320,6 +340,14 @@ export function Account() {
 												);
 											})()}
 										</span>
+									</div>
+									<div className="w-8">
+										<Button
+											variant="destructive"
+											onClick={() => mutateAsync(p_schedule.id)}
+										>
+											Cancelar
+										</Button>
 									</div>
 								</div>
 							))}
