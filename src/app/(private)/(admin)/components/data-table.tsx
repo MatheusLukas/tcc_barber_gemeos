@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/src/components/ui/button";
+import { Skeleton } from "@/src/components/ui/skeleton";
 import {
 	Table,
 	TableBody,
@@ -28,6 +29,7 @@ interface DataTableProps<TData, TValue> {
 	setFilter: (value: string) => void;
 	filterValue: string;
 	filterColumn: string;
+	isLoading?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -35,6 +37,7 @@ export function DataTable<TData, TValue>({
 	data,
 	filterValue,
 	filterColumn,
+	isLoading = false,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -57,6 +60,10 @@ export function DataTable<TData, TValue>({
 	useEffect(() => {
 		table.getColumn(filterColumn)?.setFilterValue(filterValue);
 	}, [filterValue, table]);
+
+	if (isLoading) {
+		return <TableSkeleton columns={columns} />;
+	}
 
 	return (
 		<div>
@@ -127,6 +134,43 @@ export function DataTable<TData, TValue>({
 				>
 					Próximo
 				</Button>
+			</div>
+		</div>
+	);
+}
+
+function TableSkeleton<TData, TValue>({
+	columns,
+}: { columns: ColumnDef<TData, TValue>[] }) {
+	return (
+		<div>
+			<div className="rounded-md border">
+				<Table>
+					<TableHeader className="bg-muted">
+						<TableRow>
+							{columns.map((_, index) => (
+								<TableHead key={index}>
+									<Skeleton className="h-8 w-full" />
+								</TableHead>
+							))}
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						{Array.from({ length: 5 }).map((_, rowIndex) => (
+							<TableRow key={rowIndex}>
+								{columns.map((_, colIndex) => (
+									<TableCell key={colIndex}>
+										<Skeleton className="h-10 w-full" />
+									</TableCell>
+								))}
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
+			</div>
+			<div className="flex items-center justify-end space-x-2 py-4">
+				<Skeleton className="h-9 w-24" />
+				<Skeleton className="h-9 w-24" />
 			</div>
 		</div>
 	);

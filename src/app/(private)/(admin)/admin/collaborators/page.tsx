@@ -2,9 +2,10 @@
 import { Animation } from "@/src/components/animation";
 import { Input } from "@/src/components/ui/input";
 import { ScrollArea } from "@/src/components/ui/scroll-area";
+import { getBarbers } from "@/src/server/admin/getBarbers";
+import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { useState } from "react";
-import { FilterCollaborator } from "./components/filter-collaborator";
 import { ModalCreateCollaborator } from "./components/modal-create-collaborator";
 import { ModalCreateJob } from "./components/modal-create-job";
 import { ShowCollaborators } from "./components/show-collaborators";
@@ -13,6 +14,14 @@ import { TableCollaborators } from "./components/table-collaborators";
 
 export default function Collaborators() {
 	const [filterValue, setFilterValue] = useState("");
+
+	const { data: barbers, isLoading } = useQuery({
+		queryKey: ["getBarbers"],
+		queryFn: async () => {
+			const [data, _] = await getBarbers();
+			return data;
+		},
+	});
 
 	return (
 		<div className="space-y-4">
@@ -31,7 +40,7 @@ export default function Collaborators() {
 					<ModalCreateCollaborator />
 				</Animation>
 			</div>
-			<div className="grid xl:grid-cols-4 grid-cols-3 2xl:grid-cols-5 gap-y-2">
+			<div className="grid xl:grid-cols-4 2xl:grid-cols-5 grid-cols-1 sm:grid-cols-2 gap-y-2">
 				<ShowCollaborators />
 			</div>
 			<div className="flex justify-between items-center">
@@ -68,14 +77,13 @@ export default function Collaborators() {
 						/>
 						<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
 					</Animation>
-					<Animation delay={0.7} once direction="left">
-						<FilterCollaborator />
-					</Animation>
 				</div>
 				<Animation direction="up">
 					<TableCollaborators
 						filterValue={filterValue}
 						setFilter={setFilterValue}
+						data={barbers ?? []}
+						isLoading={isLoading}
 					/>
 				</Animation>
 			</div>

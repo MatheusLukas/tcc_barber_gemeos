@@ -56,16 +56,11 @@ export function FormSignIn() {
 							password: data.password,
 						},
 						{
-							onRequest: () => {
-								console.log("Requesting...");
-							},
 							onSuccess: (data) => {
-								console.log("Success", data);
 								resolve(data);
 								router.push("/");
 							},
 							onError: (error) => {
-								console.log("Error", error);
 								reject(error.error);
 							},
 						},

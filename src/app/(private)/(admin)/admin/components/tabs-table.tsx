@@ -1,5 +1,6 @@
 "use client";
 import { Animation } from "@/src/components/animation";
+import { ResetFilters } from "@/src/components/reset-filters";
 import { Input } from "@/src/components/ui/input";
 import {
 	Tabs,
@@ -7,17 +8,109 @@ import {
 	TabsList,
 	TabsTrigger,
 } from "@/src/components/ui/tabs";
+import { getScheduleClosed } from "@/src/server/admin/getScheduleClosed";
+import { getSchedulePending } from "@/src/server/admin/getSchedulePending";
+import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { parseAsString, useQueryState } from "nuqs";
 import { useState } from "react";
 import { FilterClient } from "./filter-client";
 import { TableClients } from "./table-clients";
 
 export function TabsTable() {
+	const params = useSearchParams();
 	const [filterValue, setFilterValue] = useState("");
 
+	const [job] = useQueryState("jobs", parseAsString.withDefault(""));
+	const [status] = useQueryState("status", parseAsString.withDefault(""));
+	const [date] = useQueryState("date", parseAsString.withDefault(""));
+	const [time] = useQueryState("time", parseAsString.withDefault(""));
+	const [responsible] = useQueryState(
+		"responsible",
+		parseAsString.withDefault(""),
+	);
+
+	console.log(job, status, date, time, responsible, "filter");
+
+	const { data: schedulePending, isLoading } = useQuery({
+		queryKey: ["schedulePending", job, status, date, time, responsible],
+		queryFn: async () => {
+			console.log(job, status, date, time, responsible, "filter2");
+			const statusValues = [
+				"pending",
+				"no_payed",
+				"confirmed",
+				"refunded",
+				"canceled",
+			] as const;
+			const validStatus = statusValues.includes(status as any)
+				? (status as (typeof statusValues)[number])
+				: undefined;
+
+			const jobIds = job
+				? job.includes(",")
+					? job.split(",").filter(Boolean)
+					: job
+						? [job]
+						: []
+				: [];
+			const responsibleIds = responsible
+				? responsible.includes(",")
+					? responsible.split(",").filter(Boolean)
+					: responsible
+						? [responsible]
+						: []
+				: [];
+
+			const [data, _] = await getSchedulePending({
+				jobId: jobIds.length > 0 ? jobIds : undefined,
+				status: validStatus,
+				date: date || undefined,
+				responsible: responsibleIds.length > 0 ? responsibleIds : undefined,
+			});
+			console.log(data);
+			return data;
+		},
+	});
+
+	const { data: scheduleClosed, isLoading: isLoadingClosed } = useQuery({
+		queryKey: ["scheduleClosed", job, status, date, time, responsible],
+		queryFn: async () => {
+			const statusValues = ["canceled", "confirmed", "refunded"] as const;
+			const validStatus = statusValues.includes(status as any)
+				? (status as (typeof statusValues)[number])
+				: undefined;
+
+			const jobIds = job
+				? job.includes(",")
+					? job.split(",").filter(Boolean)
+					: job
+						? [job]
+						: []
+				: [];
+			const responsibleIds = responsible
+				? responsible.includes(",")
+					? responsible.split(",").filter(Boolean)
+					: responsible
+						? [responsible]
+						: []
+				: [];
+
+			const [data, _] = await getScheduleClosed({
+				jobId: jobIds.length > 0 ? jobIds : undefined,
+				status: validStatus,
+				date: date || undefined,
+				responsible: responsibleIds.length > 0 ? responsibleIds : undefined,
+			});
+			console.log(data);
+			return data;
+		},
+	});
+
 	return (
-		<div className="w-full">
-			<Tabs defaultValue="abertos" className="w-full">
+		<div>
+			<Tabs defaultValue="abertos">
 				<TabsList className="bg-transparent p-0 h-auto flex justify-between">
 					<div className="h-10 flex">
 						<Animation delay={0.7} once direction="down">
@@ -55,6 +148,7 @@ export function TabsTable() {
 						<Animation delay={0.7} once direction="down">
 							<FilterClient />
 						</Animation>
+						{params.size > 0 && <ResetFilters />}
 					</div>
 				</TabsList>
 
@@ -63,6 +157,8 @@ export function TabsTable() {
 						<TableClients
 							filterValue={filterValue}
 							setFilter={setFilterValue}
+							data={schedulePending ?? []}
+							isLoading={isLoading}
 						/>
 					</Animation>
 				</TabsContent>
@@ -72,6 +168,8 @@ export function TabsTable() {
 						<TableClients
 							filterValue={filterValue}
 							setFilter={setFilterValue}
+							data={scheduleClosed ?? []}
+							isLoading={isLoadingClosed}
 						/>
 					</Animation>
 				</TabsContent>

@@ -4,12 +4,14 @@ import {
 	AvatarFallback,
 	AvatarImage,
 } from "@/src/components/ui/avatar";
+import { formatNumberToCurrency } from "@/src/utils/formatNumberToCurrency";
 
 type Props = {
 	name: string;
 	image: string;
 	appointments: number;
 	earnings: number;
+	color?: string;
 };
 
 export function CardExposedCollaborator({
@@ -17,6 +19,7 @@ export function CardExposedCollaborator({
 	image,
 	appointments,
 	earnings,
+	color = "var(--color-chart-1, hsl(var(--chart-1)))",
 }: Props) {
 	return (
 		<Animation
@@ -27,7 +30,10 @@ export function CardExposedCollaborator({
 			margin="0px"
 		>
 			<div className="flex gap-4 items-center">
-				<div className="bg-primary size-2 rounded-full" />
+				<div
+					className="size-2 rounded-full"
+					style={{ backgroundColor: color }}
+				/>
 				<Avatar>
 					<AvatarImage src={image} />
 					<AvatarFallback>{name}</AvatarFallback>
@@ -36,7 +42,7 @@ export function CardExposedCollaborator({
 			</div>
 			<div className="*:text-xs flex flex-col justify-center">
 				<p>{appointments} Atendimentos</p>
-				<p className="text-green-500">R$ {earnings}</p>
+				<p className="text-green-500">{formatNumberToCurrency(earnings)}</p>
 			</div>
 		</Animation>
 	);

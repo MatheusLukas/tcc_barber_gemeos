@@ -49,7 +49,6 @@ type Props = {
 export function Navbar() {
 	const [isScrolled, setIsScrolled] = useState(false);
 	const { data: session } = useSession();
-	console.log(session);
 
 	useEffect(() => {
 		if (window.scrollY < 100) {
@@ -138,9 +137,9 @@ function NavbarMobile({ session }: Props) {
 					<span className="sr-only">Abrir/Fechar Menu</span>
 				</Button>
 			</SheetTrigger>
-			<SheetContent side="right" className="pl-0 w-screen md:hidden">
+			<SheetContent side="right" className="w-full md:hidden">
 				<DialogTitle />
-				<div className="flex flex-col gap-8 items-center justify-center h-full">
+				<div className="flex flex-col gap-8 items-center justify-center">
 					{itemsNav?.map((item) => (
 						<button
 							key={item.href}
@@ -175,7 +174,9 @@ function NavbarMobile({ session }: Props) {
 
 function ButtonLogin() {
 	const { data: session } = useSession();
-	const isAdmin = session?.user?.role === ROLES.ADMIN;
+	const isAdmin =
+		session?.user?.role === ROLES.ADMIN ||
+		session?.user?.role === ROLES.COLLABORATOR;
 	return !session ? (
 		<Button
 			variant="secondary"

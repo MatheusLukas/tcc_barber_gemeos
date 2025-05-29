@@ -42,12 +42,9 @@ export function DialogForgetPassword() {
 				email: data.email,
 			});
 
-			console.log(userExisting, "userExisting");
-
 			if (!userExisting && barberExisting)
 				return toast.error("Usuário não encontrado");
 
-			console.log(data.email, "hi");
 			const forgetPromise = new Promise((resolve, reject) => {
 				try {
 					forgetPassword(
@@ -56,21 +53,15 @@ export function DialogForgetPassword() {
 							redirectTo: "/reset-password",
 						},
 						{
-							onRequest: () => {
-								console.log("Requesting...");
-							},
 							onSuccess: (data) => {
-								console.log("Success", data);
 								resolve(data);
 							},
 							onError: (error) => {
-								console.log("Error", error);
 								reject(error);
 							},
 						},
 					);
 				} catch (error) {
-					console.log("Error2", error);
 					reject(error);
 				}
 			});
