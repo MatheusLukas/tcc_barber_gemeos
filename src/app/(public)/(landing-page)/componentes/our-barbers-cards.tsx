@@ -4,7 +4,7 @@ import Image from "next/image";
 export function OurBarbersCard({
 	photo,
 	barber,
-	role,
+	jobTitle,
 	icon: IconComponent,
 	idx: number,
 }: any) {
@@ -16,17 +16,17 @@ export function OurBarbersCard({
 			className="w-72 flex justify-center flex-col gap-2"
 		>
 			<Image
-				className="w-full h-full object-cover"
+				className="w-full h-60 object-cover"
 				src={photo}
 				alt={`${barber} photo`}
-				width={280}
-				height={310}
+				width={1920}
+				height={1080}
 				quality={100}
 			/>
 			<div className="flex justify-between">
 				<div>
 					<p className="text-lg font-bold">{barber}</p>
-					<p className="text-muted-foreground">{role}</p>
+					<p className="text-muted-foreground">{jobTitle}</p>
 				</div>
 				<div>
 					<IconComponent className="text-muted-foreground" />

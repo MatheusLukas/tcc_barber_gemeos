@@ -1,35 +1,19 @@
+"use client";
 import { Animation } from "@/src/components/animation";
+import { getAllBarbers } from "@/src/server/getAllBarbers";
+import { useQuery } from "@tanstack/react-query";
 import { Instagram } from "lucide-react";
 import { OurBarbersCard } from "./our-barbers-cards";
 
-const cardBarbers = [
-	{
-		photo: "/barbeiro.jpg",
-		name: "Daniel Freitas",
-		role: "Barbeiro",
-		icon: Instagram,
-	},
-	{
-		photo: "/barbeiro.jpg",
-		name: "Gabriel Freitas",
-		role: "Barbeiro",
-		icon: Instagram,
-	},
-	{
-		photo: "/barbeiro.jpg",
-		name: "Richard",
-		role: "Agiota",
-		icon: Instagram,
-	},
-	{
-		photo: "/barbeiro.jpg",
-		name: "Maionese",
-		role: "Manicure",
-		icon: Instagram,
-	},
-];
-
 export function OurBarbers() {
+	const { data, isLoading } = useQuery({
+		queryKey: ["barbers"],
+		queryFn: async () => {
+			const [data, _] = await getAllBarbers();
+			return data;
+		},
+	});
+
 	return (
 		<div className="flex flex-col container mt-28 gap-4">
 			<Animation once direction="left">
@@ -38,14 +22,14 @@ export function OurBarbers() {
 				</p>
 			</Animation>
 			<div className="grid grid-cols-1 gap-8 sm:gap-0 sm:grid-cols-2 lg:grid-cols-3 place-items-center xl:grid-cols-4 h-fit">
-				{cardBarbers.map((barber, idx) => {
+				{data?.map((barber, idx) => {
 					return (
 						<OurBarbersCard
-							key={barber.name}
+							key={barber.id}
 							barber={barber.name}
-							photo={barber.photo}
-							role={barber.role}
-							icon={barber.icon}
+							photo={barber.image}
+							jobTitle="Barbeiro"
+							icon={Instagram}
 							idx={idx}
 						/>
 					);

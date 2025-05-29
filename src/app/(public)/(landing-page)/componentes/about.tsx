@@ -61,7 +61,7 @@ export function About() {
 				>
 					<div className="bg-muted p-3 shadow-lg absolute md:left-48 md:top-4 lg:top-7 xl:left-80 rotate-12 -z-10 lg:block hidden">
 						<Image
-							src="/barbers.jpeg"
+							src="/barbeiros.jpeg"
 							alt="About"
 							width={1920}
 							height={1080}
