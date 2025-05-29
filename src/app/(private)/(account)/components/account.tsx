@@ -1,15 +1,36 @@
 "use client";
 
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
+} from "@/src/components/ui/avatar";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
 import { ScrollArea } from "@/src/components/ui/scroll-area";
+import {
+	Tabs,
+	TabsContent,
+	TabsList,
+	TabsTrigger,
+} from "@/src/components/ui/tabs";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/src/components/ui/tooltip";
 import { phoneNumber, useSession } from "@/src/lib/auth-client";
 import { queryClient } from "@/src/lib/query-client";
 import { cn } from "@/src/lib/utils";
-import { getUserSchedulePending } from "@/src/server/admin/getSchedulePending";
+import {
+	getUserSchedulePending,
+	getUserSchedulesConcluded,
+} from "@/src/server/admin/getSchedulePending";
 import { getUser } from "@/src/server/getUser";
 import { updateUserComunication } from "@/src/server/updateUserComunication";
+import { formatNumberToCurrency } from "@/src/utils/formatNumberToCurrency";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import * as motion from "framer-motion/client";
@@ -41,17 +62,27 @@ export function Account() {
 		enabled: !!data?.user.id,
 	});
 
-	const { data: userPendingSchedules, isLoading: userPendingSchedulesLoading } =
-		useQuery({
-			queryKey: ["getUserPendingSchedules", data?.user.id],
-			queryFn: async () => {
-				const [scheduleData, _] = await getUserSchedulePending({
-					userId: data?.user.id!,
-				});
-				return scheduleData;
-			},
-			enabled: !!data?.user.id,
-		});
+	const { data: userPendingSchedules } = useQuery({
+		queryKey: ["getUserPendingSchedules", data?.user.id],
+		queryFn: async () => {
+			const [scheduleData, _] = await getUserSchedulePending({
+				userId: data?.user.id!,
+			});
+			return scheduleData;
+		},
+		enabled: !!data?.user.id,
+	});
+
+	const { data: userConcludedSchedules } = useQuery({
+		queryKey: ["getUserConcludedSchedules", data?.user.id],
+		queryFn: async () => {
+			const [scheduleData, _] = await getUserSchedulesConcluded({
+				userId: data?.user.id!,
+			});
+			return scheduleData;
+		},
+		enabled: !!data?.user.id,
+	});
 
 	const userData = user ? user[0] : null;
 
@@ -115,6 +146,11 @@ export function Account() {
 		canceled: "Cancelado",
 		confirmed: "Confirmado",
 		pending: "Pendente",
+	};
+
+	const paymentMethod = {
+		DINHEIRO: "Dinheiro",
+		MERCADO_PAGO: "Mercado Pago",
 	};
 
 	return (
@@ -208,18 +244,166 @@ export function Account() {
 				/>
 			</div>
 			<p className="text-4xl font-bold">Sua Agenda</p>
-			<ScrollArea className="w-full h-96 p-4 rounded-xl bg-muted mt-6 flex items-center justify-between">
-				{userPendingSchedules?.map((p_schedule) => (
-					<div
-						key={p_schedule.id}
-						className="flex items-center justify-center h-full"
-					>
-						<h2 className="text-4xl font-bold">
-							{status[p_schedule.status as keyof typeof status]}
-						</h2>
-					</div>
-				))}
-			</ScrollArea>
+			<Tabs defaultValue="open" className="mt-6">
+				<TabsList>
+					<TabsTrigger value="open">Aberto</TabsTrigger>
+					<TabsTrigger value="closed">Fechado</TabsTrigger>
+				</TabsList>
+				<TabsContent value="open">
+					<ScrollArea className="w-full h-96 p-4 bg-muted my-6">
+						<div className="flex flex-col gap-4">
+							{userPendingSchedules?.map((p_schedule) => (
+								<div
+									key={p_schedule.id}
+									className="flex h-full justify-between bg-card p-3 rounded-md items-center *:w-1/6"
+								>
+									<div className="flex items-center flex-col gap-2">
+										<span className="font-bold">{p_schedule.barber.name}</span>
+										<Avatar className="size-8">
+											<AvatarImage src={p_schedule.barber.image} />
+											<AvatarFallback>
+												{p_schedule.barber.name[0].toUpperCase()}
+											</AvatarFallback>
+										</Avatar>
+									</div>
+									<div className="flex flex-col gap-2">
+										<p className="font-bold">Pagamento</p>
+										<span className="text-muted-foreground">
+											{
+												paymentMethod[
+													p_schedule.paymentMethod as keyof typeof paymentMethod
+												]
+											}
+										</span>
+									</div>
+									<div className="flex flex-col gap-2">
+										<p className="font-bold">Preço</p>
+										<span className="text-muted-foreground">
+											{formatNumberToCurrency(p_schedule.price)}
+										</span>
+									</div>
+									<div className="flex flex-col gap-2">
+										<p className="font-bold">Status</p>
+										<span className="text-muted-foreground">
+											{status[p_schedule.status as keyof typeof status]}
+										</span>
+									</div>
+									<div className="flex flex-col gap-2">
+										<p className="font-bold">Data</p>
+										<span className="text-muted-foreground">
+											{p_schedule.date.toLocaleDateString()}
+										</span>
+									</div>
+									<div className="flex flex-col gap-2">
+										<p className="font-bold">Serviço</p>
+										<span className="text-muted-foreground">
+											{(() => {
+												const jobsText = (p_schedule.job as { job: string }[])
+													.map((job) => job.job)
+													.join(", ");
+
+												if (jobsText.length <= 20) {
+													return jobsText;
+												}
+
+												return (
+													<TooltipProvider>
+														<Tooltip>
+															<TooltipTrigger className="cursor-help">
+																{jobsText.substring(0, 20)}...
+															</TooltipTrigger>
+															<TooltipContent className="max-w-[300px] p-2">
+																{jobsText}
+															</TooltipContent>
+														</Tooltip>
+													</TooltipProvider>
+												);
+											})()}
+										</span>
+									</div>
+								</div>
+							))}
+						</div>
+					</ScrollArea>
+				</TabsContent>
+				<TabsContent value="closed">
+					<ScrollArea className="w-full h-96 p-4 bg-muted my-6">
+						<div className="flex flex-col gap-4">
+							{userConcludedSchedules?.map((p_schedule) => (
+								<div
+									key={p_schedule.id}
+									className="flex h-full justify-between bg-card p-3 rounded-md items-center *:w-1/6"
+								>
+									<div className="flex items-center flex-col gap-2">
+										<span className="font-bold">{p_schedule.barber.name}</span>
+										<Avatar className="size-8">
+											<AvatarImage src={p_schedule.barber.image} />
+											<AvatarFallback>
+												{p_schedule.barber.name[0].toUpperCase()}
+											</AvatarFallback>
+										</Avatar>
+									</div>
+									<div className="flex flex-col gap-2">
+										<p className="font-bold">Pagamento</p>
+										<span className="text-muted-foreground">
+											{
+												paymentMethod[
+													p_schedule.paymentMethod as keyof typeof paymentMethod
+												]
+											}
+										</span>
+									</div>
+									<div className="flex flex-col gap-2">
+										<p className="font-bold">Preço</p>
+										<span className="text-muted-foreground">
+											{formatNumberToCurrency(p_schedule.price)}
+										</span>
+									</div>
+									<div className="flex flex-col gap-2">
+										<p className="font-bold">Status</p>
+										<span className="text-muted-foreground">
+											{status[p_schedule.status as keyof typeof status]}
+										</span>
+									</div>
+									<div className="flex flex-col gap-2">
+										<p className="font-bold">Data</p>
+										<span className="text-muted-foreground">
+											{p_schedule.date.toLocaleDateString()}
+										</span>
+									</div>
+									<div className="flex flex-col gap-2">
+										<p className="font-bold">Serviço</p>
+										<span className="text-muted-foreground">
+											{(() => {
+												const jobsText = (p_schedule.job as { job: string }[])
+													.map((job) => job.job)
+													.join(", ");
+
+												if (jobsText.length <= 20) {
+													return jobsText;
+												}
+
+												return (
+													<TooltipProvider>
+														<Tooltip>
+															<TooltipTrigger className="cursor-help">
+																{jobsText.substring(0, 20)}...
+															</TooltipTrigger>
+															<TooltipContent className="max-w-[300px] p-2">
+																{jobsText}
+															</TooltipContent>
+														</Tooltip>
+													</TooltipProvider>
+												);
+											})()}
+										</span>
+									</div>
+								</div>
+							))}
+						</div>
+					</ScrollArea>
+				</TabsContent>
+			</Tabs>
 		</motion.div>
 	);
 }

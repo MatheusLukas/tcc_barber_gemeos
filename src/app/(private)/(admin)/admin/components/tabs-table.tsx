@@ -22,22 +22,87 @@ export function TabsTable() {
 	const params = useSearchParams();
 	const [filterValue, setFilterValue] = useState("");
 
-	const [filter] = useQueryState("jobs", parseAsString.withDefault(""));
-	console.log(filter, "here");
+	const [job] = useQueryState("jobs", parseAsString.withDefault(""));
+	const [status] = useQueryState("status", parseAsString.withDefault(""));
+	const [date] = useQueryState("date", parseAsString.withDefault(""));
+	const [time] = useQueryState("time", parseAsString.withDefault(""));
+	const [responsible] = useQueryState(
+		"responsible",
+		parseAsString.withDefault(""),
+	);
+
+	console.log(job, status, date, time, responsible, "filter");
 
 	const { data: schedulePending, isLoading } = useQuery({
-		queryKey: ["schedulePending"],
+		queryKey: ["schedulePending", job, status, date, time, responsible],
 		queryFn: async () => {
-			const [data, _] = await getSchedulePending();
+			console.log(job, status, date, time, responsible, "filter2");
+			const statusValues = [
+				"pending",
+				"no_payed",
+				"confirmed",
+				"refunded",
+				"canceled",
+			] as const;
+			const validStatus = statusValues.includes(status as any)
+				? (status as (typeof statusValues)[number])
+				: undefined;
+
+			const jobIds = job
+				? job.includes(",")
+					? job.split(",").filter(Boolean)
+					: job
+						? [job]
+						: []
+				: [];
+			const responsibleIds = responsible
+				? responsible.includes(",")
+					? responsible.split(",").filter(Boolean)
+					: responsible
+						? [responsible]
+						: []
+				: [];
+
+			const [data, _] = await getSchedulePending({
+				jobId: jobIds.length > 0 ? jobIds : undefined,
+				status: validStatus,
+				date: date || undefined,
+				responsible: responsibleIds.length > 0 ? responsibleIds : undefined,
+			});
 			console.log(data);
 			return data;
 		},
 	});
 
 	const { data: scheduleClosed, isLoading: isLoadingClosed } = useQuery({
-		queryKey: ["scheduleClosed"],
+		queryKey: ["scheduleClosed", job, status, date, time, responsible],
 		queryFn: async () => {
-			const [data, _] = await getScheduleClosed();
+			const statusValues = ["canceled", "confirmed", "refunded"] as const;
+			const validStatus = statusValues.includes(status as any)
+				? (status as (typeof statusValues)[number])
+				: undefined;
+
+			const jobIds = job
+				? job.includes(",")
+					? job.split(",").filter(Boolean)
+					: job
+						? [job]
+						: []
+				: [];
+			const responsibleIds = responsible
+				? responsible.includes(",")
+					? responsible.split(",").filter(Boolean)
+					: responsible
+						? [responsible]
+						: []
+				: [];
+
+			const [data, _] = await getScheduleClosed({
+				jobId: jobIds.length > 0 ? jobIds : undefined,
+				status: validStatus,
+				date: date || undefined,
+				responsible: responsibleIds.length > 0 ? responsibleIds : undefined,
+			});
 			console.log(data);
 			return data;
 		},
