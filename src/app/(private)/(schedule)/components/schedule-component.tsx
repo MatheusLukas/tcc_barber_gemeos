@@ -87,7 +87,6 @@ export function ScheduleComponent() {
 	const { mutateAsync, isLoading } = useMutation({
 		mutationKey: ["create-schedule"],
 		mutationFn: async (data: schemaScheduleType) => {
-			console.log("data", data.barberId);
 			const [response, err] = await createSchedule({
 				userId: user!.user!.id!,
 				userName: user!.user!.name!,
@@ -172,7 +171,6 @@ export function ScheduleComponent() {
 							onMouseEnter={() => setHovered(idx)}
 							onMouseLeave={() => setHovered(null)}
 							onClick={() => {
-								console.log("barber", barber.id);
 								setClicked(idx);
 								setBarberId(barber.id);
 							}}

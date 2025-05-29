@@ -29,8 +29,6 @@ export default async function authMiddleware(request: NextRequest) {
 	const redirectUrl = request.nextUrl.clone();
 	const sessionCookie = getSessionCookie(request);
 
-	console.log(sessionCookie, "teste");
-
 	if (pathname === "/reset-password" && !searchParams.has("token")) {
 		redirectUrl.pathname = "/";
 		return NextResponse.redirect(redirectUrl.href);

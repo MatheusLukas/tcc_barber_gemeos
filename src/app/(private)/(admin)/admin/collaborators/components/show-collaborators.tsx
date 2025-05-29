@@ -15,7 +15,6 @@ export function ShowCollaborators() {
 		queryKey: ["getBarberInfo"],
 		queryFn: async () => {
 			const [data, _] = await getAllBarbersFormatteds();
-			console.log(data);
 			return data;
 		},
 	});

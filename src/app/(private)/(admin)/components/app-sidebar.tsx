@@ -8,7 +8,7 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/src/components/ui/sidebar";
-import { Calendar, Home, Package, Settings, Users } from "lucide-react";
+import { Calendar, Home, Package, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -30,17 +30,12 @@ const items = [
 	},
 	{
 		title: "Estoque",
-		url: "/admin/estoque",
+		url: "/admin/stock",
 		icon: Package,
-	},
-	{
-		title: "Configurações",
-		url: "#",
-		icon: Settings,
 	},
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ isAdmin }: { isAdmin: boolean }) {
 	return (
 		<Sidebar className="border-none" collapsible="icon">
 			<SidebarHeader>
@@ -65,16 +60,18 @@ export function AppSidebar() {
 				<SidebarGroup>
 					<SidebarGroupContent>
 						<SidebarMenu>
-							{items.map((item, idx) => (
-								<SidebarMenuItem key={item.title}>
-									<SidebarMenuButton asChild>
-										<Link href={item.url}>
-											<item.icon />
-											<span>{item.title}</span>
-										</Link>
-									</SidebarMenuButton>
-								</SidebarMenuItem>
-							))}
+							{items
+								.filter((item) => isAdmin || item.title !== "Profissionais")
+								.map((item) => (
+									<SidebarMenuItem key={item.title}>
+										<SidebarMenuButton asChild>
+											<Link href={item.url}>
+												<item.icon />
+												<span>{item.title}</span>
+											</Link>
+										</SidebarMenuButton>
+									</SidebarMenuItem>
+								))}
 						</SidebarMenu>
 					</SidebarGroupContent>
 				</SidebarGroup>
